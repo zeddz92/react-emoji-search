@@ -10,7 +10,8 @@ import { terser } from "rollup-plugin-terser";
 const EXTENSIONS = [".ts", ".tsx"];
 
 // Excluded dependencies
-const EXTERNAL = Object.keys(pkg.devDependencies);
+const devExternal = Object.keys(pkg.devDependencies);
+const external = Object.keys(pkg.dependencies);
 
 export default {
   input: ["src/index.tsx"],
@@ -31,7 +32,20 @@ export default {
       exclude: "./node_modules/**",
     }),
     postcss({ minimize: true }),
+    {
+      name: "Custom Rollup Plugin`",
+
+      generateBundle: (_, bundle) => {
+        Object.entries(bundle).forEach((entry) => {
+          bundle[entry[0]].code = entry[1].code.replace(
+            "../../node_modules/",
+            ""
+          );
+          bundle[entry[0]].code = entry[1].code.replace("../node_modules/", "");
+        });
+      },
+    },
     terser(),
   ],
-  external: EXTERNAL,
+  external: [...devExternal, ...external],
 };
