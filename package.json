@@ -29,9 +29,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zeddz92/emoji-picker/issues"
+    "url": "https://github.com/zeddz92/react-emoji-search/issues"
   },
-  "homepage": "https://github.com/zeddz92/emoji-picker#readme",
+  "homepage": "https://github.com/zeddz92/react-emoji-search#readme",
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
