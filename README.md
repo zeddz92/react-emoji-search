@@ -10,7 +10,6 @@ Emoji picker displayed just like Whatsapp.
 
 ### Features:
 
-- Small bundle size
 - Large emoji library
 - Customize with your own styles
 - Recently used emojis support
@@ -27,14 +26,14 @@ Emoji picker displayed just like Whatsapp.
 # Installation
 
 ```
-npm install emoji-picker
+npm install react-emoji-search
 ```
 
 # Usage
 
 ```javascript
 import React, { useState } from "react";
-import EmojiPicker from "emoji-picker";
+import EmojiPicker from "react-emoji-search";
 
 const Example = () => {
   const [emoji, setEmoji] = useState("😀️");
