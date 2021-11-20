@@ -1,18 +1,13 @@
 import "./styles.css";
 
 import classNames from "classnames";
-import inView from "element-in-view";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, { FC, useRef } from "react";
 import { CSSTransition } from "react-transition-group";
-import { BaseEmoji } from "unicode-emoji";
 
 import { EmojiButton } from "./components/EmojiButton";
 import { categories, Tabs } from "./components/Tabs";
-import { LOCAL_STORAGE_RECENT } from "./constants";
-import { smoothScroll } from "./utils/smoothScroll";
-import { useLazyUnicodeEmoji } from "./utils/useLazyUnicodeEmoji";
-import { useLocalStorage } from "./utils/useLocalStorage";
 import { Styles } from "types/styles";
+import { useEmojiSearch } from "./utils/useEmojiSearch";
 
 interface EmojiPickerProps {
   mode?: "dark" | "light";
@@ -27,93 +22,21 @@ const Component: FC<EmojiPickerProps> = ({
   onEmojiClick,
   styles,
 }) => {
-  const { baseEmojis, groupedEmojis } = useLazyUnicodeEmoji();
-
   const scrollContentRef = useRef<HTMLDivElement>(null);
   const categoriesScrollRef = useRef<(HTMLSpanElement | null)[]>([]);
 
-  const [recentEmojis, setRecentEmojis] = useLocalStorage<BaseEmoji[]>(
-    LOCAL_STORAGE_RECENT,
-    []
-  );
-
-  const [showInput, setShowInput] = useState(true);
-  const [search, setSearch] = useState("");
-  const [tabIndex, setTabIndex] = useState(0);
-
-  const [resultEmojis, setResultEmojis] = useState<BaseEmoji[] | undefined>(
-    undefined
-  );
-
-  useEffect(() => {
-    if (search.trim()) {
-      const value = search.toLowerCase();
-
-      setResultEmojis(
-        baseEmojis?.filter(
-          (emoji) =>
-            emoji.description.toLocaleLowerCase().includes(value) ||
-            emoji.keywords.includes(value)
-        )
-      );
-    } else {
-      setResultEmojis(undefined);
-    }
-  }, [search]);
-
-  const handleScroll = useCallback(
-    (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-      const target = e.currentTarget;
-      const isScrolling = e.currentTarget.classList.contains("scrolling");
-      if (isScrolling && !search) {
-        return;
-      }
-      const elemCategories = target.querySelectorAll(".emoji-category-bottom");
-      elemCategories.forEach((el, index) => {
-        if (!isScrolling && !search && inView(el as any)) {
-          setTabIndex(index);
-        }
-      });
-    },
-    []
-  );
-
-  const handleTabChange = (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    newValue: number
-  ) => {
-    setSearch("");
-    setTabIndex(newValue);
-    setTimeout(() => {
-      setShowInput(true);
-
-      scrollContentRef.current?.classList.add("scrolling");
-      const categoryElement = categoriesScrollRef.current[newValue]!;
-
-      smoothScroll(categoryElement, scrollContentRef.current!).then(() => {
-        scrollContentRef.current?.classList.remove("scrolling");
-      });
-    }, 0);
-  };
-
-  const handleEmojiClick = (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    data: BaseEmoji,
-    category?: string
-  ) => {
-    if (category !== "recent") {
-      if (!recentEmojis.some(({ emoji }) => emoji === data.emoji)) {
-        setRecentEmojis(
-          LOCAL_STORAGE_RECENT,
-          [
-            ...recentEmojis,
-            { ...data, keywords: [], variations: [] },
-          ].sort((a, b) => (a.emoji > b.emoji ? -1 : 1))
-        );
-      }
-    }
-    onEmojiClick && onEmojiClick(data.emoji);
-  };
+  const {
+    showInput,
+    handleEmojiClick,
+    handleScroll,
+    handleTabChange,
+    setSearch,
+    setShowInput,
+    tabIndex,
+    search,
+    resultEmojis,
+    groupedEmojis,
+  } = useEmojiSearch(scrollContentRef, categoriesScrollRef, onEmojiClick);
 
   return (
     <div
