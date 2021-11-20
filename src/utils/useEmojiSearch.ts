@@ -1,22 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import inView from "element-in-view";
-import { LOCAL_STORAGE_RECENT } from "../constants";
 import { BaseEmoji } from "unicode-emoji";
 import { useLazyUnicodeEmoji } from "./useLazyUnicodeEmoji";
-import { useLocalStorage } from "./useLocalStorage";
 import { smoothScroll } from "./smoothScroll";
 
 export const useEmojiSearch = (
   scrollContentRef: React.RefObject<HTMLDivElement>,
-  categoriesScrollRef: React.MutableRefObject<(HTMLSpanElement | null)[]>,
-  onEmojiClick?: (emoji: string) => void
+  categoriesScrollRef: React.MutableRefObject<(HTMLSpanElement | null)[]>
 ) => {
   const { baseEmojis, groupedEmojis } = useLazyUnicodeEmoji();
-
-  const [recentEmojis, setRecentEmojis] = useLocalStorage<BaseEmoji[]>(
-    LOCAL_STORAGE_RECENT,
-    []
-  );
 
   const [showInput, setShowInput] = useState(true);
   const [search, setSearch] = useState("");
@@ -77,29 +69,9 @@ export const useEmojiSearch = (
     }, 0);
   };
 
-  const handleEmojiClick = (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    data: BaseEmoji,
-    category?: string
-  ) => {
-    if (category !== "recent") {
-      if (!recentEmojis.some(({ emoji }) => emoji === data.emoji)) {
-        setRecentEmojis(
-          LOCAL_STORAGE_RECENT,
-          [
-            ...recentEmojis,
-            { ...data, keywords: [], variations: [] },
-          ].sort((a, b) => (a.emoji > b.emoji ? -1 : 1))
-        );
-      }
-    }
-    onEmojiClick && onEmojiClick(data.emoji);
-  };
-
   return {
     handleTabChange,
     setSearch,
-    handleEmojiClick,
     showInput,
     setShowInput,
     handleScroll,

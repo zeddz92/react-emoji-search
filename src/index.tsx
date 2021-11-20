@@ -8,6 +8,9 @@ import { EmojiButton } from "./components/EmojiButton";
 import { categories, Tabs } from "./components/Tabs";
 import { Styles } from "types/styles";
 import { useEmojiSearch } from "./utils/useEmojiSearch";
+import { BaseEmoji } from "unicode-emoji";
+import { LOCAL_STORAGE_RECENT } from "./constants";
+import { useLocalStorage } from "./utils/useLocalStorage";
 
 interface EmojiPickerProps {
   mode?: "dark" | "light";
@@ -25,9 +28,13 @@ const Component: FC<EmojiPickerProps> = ({
   const scrollContentRef = useRef<HTMLDivElement>(null);
   const categoriesScrollRef = useRef<(HTMLSpanElement | null)[]>([]);
 
+  const [recentEmojis, setRecentEmojis] = useLocalStorage<BaseEmoji[]>(
+    LOCAL_STORAGE_RECENT,
+    []
+  );
+
   const {
     showInput,
-    handleEmojiClick,
     handleScroll,
     handleTabChange,
     setSearch,
@@ -36,7 +43,26 @@ const Component: FC<EmojiPickerProps> = ({
     search,
     resultEmojis,
     groupedEmojis,
-  } = useEmojiSearch(scrollContentRef, categoriesScrollRef, onEmojiClick);
+  } = useEmojiSearch(scrollContentRef, categoriesScrollRef);
+
+  const handleEmojiClick = (
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    data: BaseEmoji,
+    category?: string
+  ) => {
+    if (category !== "recent") {
+      if (!recentEmojis.some(({ emoji }) => emoji === data.emoji)) {
+        setRecentEmojis(
+          LOCAL_STORAGE_RECENT,
+          [
+            ...recentEmojis,
+            { ...data, keywords: [], variations: [] },
+          ].sort((a, b) => (a.emoji > b.emoji ? -1 : 1))
+        );
+      }
+    }
+    onEmojiClick && onEmojiClick(data.emoji);
+  };
 
   return (
     <div
