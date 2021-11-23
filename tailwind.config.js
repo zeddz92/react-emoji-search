@@ -28,6 +28,10 @@ module.exports = {
           100: "rgba(241,241,242,0.45)",
           200: "rgba(241,241,242,0.63)",
         },
+        picker: {
+          light: "#F0F0F0",
+          dark: "#2A2F32",
+        },
       },
       padding: {
         12.5: "3.25rem",
