@@ -5,7 +5,7 @@ Emoji picker displayed just like Whatsapp.
 [Demo](https://moji-search.herokuapp.com/)
 
 <div style="display: flex; align-items:center; height: 280px; justify-content: between; margin: 15px 0;">
-<img src="https://user-images.githubusercontent.com/8311115/141772301-abb7acac-1170-460c-8c57-55b604b2e253.png" style=""/>
+<img src="https://user-images.githubusercontent.com/8311115/142978462-db060fdc-c117-4d5d-a01a-7f65885bbc0c.png" style=""/>
 </div>
 
 ### Features:
@@ -43,7 +43,7 @@ const Example = () => {
     <div>
       <div>{emoji}</div>
       <EmojiPicker
-        variant="fullWidth"
+        tabsVariant="fullWidth"
         styles={{
           backgroundColor: "#772CE8",
           indicatorColor: "#69FFC3",
