@@ -1,6 +1,6 @@
 {
   "name": "react-emoji-search",
-  "version": "1.0.10",
+  "version": "1.1.0",
   "description": "",
   "main": "dist/src/index.js",
   "types": "dist",
@@ -37,13 +37,13 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
-    "style-inject": "^0.3.0",
-    "tailwindcss": "^2.2.19",
-    "scroll-into-view-if-needed": "^2.2.28",
-    "unicode-emoji": "^2.3.0",
     "classnames": "^2.3.1",
     "element-in-view": "^0.1.0",
-    "react-transition-group": "^4.4.2"
+    "react-transition-group": "^4.4.2",
+    "scroll-into-view-if-needed": "^2.2.28",
+    "style-inject": "^0.3.0",
+    "tailwindcss": "^2.2.19",
+    "unicode-emoji": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",

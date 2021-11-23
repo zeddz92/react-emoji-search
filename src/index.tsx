@@ -4,15 +4,16 @@ import classNames from "classnames";
 import inView from "element-in-view";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
+import { Styles } from "types/styles";
 import { BaseEmoji } from "unicode-emoji";
 
 import { EmojiButton } from "./components/EmojiButton";
+import { Picker } from "./components/Picker";
 import { categories, Tabs } from "./components/Tabs";
-import { LOCAL_STORAGE_RECENT } from "./constants";
+import { LOCAL_STORAGE_RECENT, LOCAL_STORAGE_VARIATION } from "./constants";
 import { smoothScroll } from "./utils/smoothScroll";
 import { useLazyUnicodeEmoji } from "./utils/useLazyUnicodeEmoji";
 import { useLocalStorage } from "./utils/useLocalStorage";
-import { Styles } from "types/styles";
 
 interface EmojiPickerProps {
   mode?: "dark" | "light";
@@ -21,21 +22,30 @@ interface EmojiPickerProps {
   styles?: Styles;
 }
 
+interface Emoji {
+  emoji: string;
+}
+
 const Component: FC<EmojiPickerProps> = ({
   tabsVariant = "default",
   mode = "light",
-  onEmojiClick,
+  onEmojiClick = () => {},
   styles,
 }) => {
   const { baseEmojis, groupedEmojis } = useLazyUnicodeEmoji();
 
   const scrollContentRef = useRef<HTMLDivElement>(null);
   const categoriesScrollRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const [recentEmojis, setRecentEmojis] = useLocalStorage<BaseEmoji[]>(
+  const [recentEmojis, setRecentEmojis] = useLocalStorage<Emoji[]>(
     LOCAL_STORAGE_RECENT,
     []
   );
+
+  const [variations, setVariations] = useLocalStorage<{
+    [key: string]: BaseEmoji;
+  }>(LOCAL_STORAGE_VARIATION, {});
 
   const [showInput, setShowInput] = useState(true);
   const [search, setSearch] = useState("");
@@ -44,6 +54,16 @@ const Component: FC<EmojiPickerProps> = ({
   const [resultEmojis, setResultEmojis] = useState<BaseEmoji[] | undefined>(
     undefined
   );
+
+  const [showPicker, setShowPicker] = useState(false);
+
+  const [emojiPicker, setEmojiPicker] = useState<{
+    element: HTMLElement | null;
+    emoji: BaseEmoji | null;
+  }>({
+    element: null,
+    emoji: null,
+  });
 
   useEffect(() => {
     if (search.trim()) {
@@ -96,31 +116,60 @@ const Component: FC<EmojiPickerProps> = ({
     }, 0);
   };
 
+  const togglePicker = (element: HTMLButtonElement, data: BaseEmoji) => {
+    setShowPicker(false);
+
+    setEmojiPicker({
+      element,
+      emoji: data,
+    });
+
+    setTimeout(() => {
+      setShowPicker(true);
+    }, 100);
+  };
+
+  const saveToRecentEmojis = (data: BaseEmoji) => {
+    if (!recentEmojis.some(({ emoji }) => emoji === data.emoji)) {
+      setRecentEmojis(
+        LOCAL_STORAGE_RECENT,
+        [...recentEmojis, { emoji: data.emoji }].sort((a, b) =>
+          a.emoji > b.emoji ? -1 : 1
+        )
+      );
+    }
+  };
   const handleEmojiClick = (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: BaseEmoji,
     category?: string
   ) => {
+    setShowPicker(false);
+
     if (category !== "recent") {
-      if (!recentEmojis.some(({ emoji }) => emoji === data.emoji)) {
-        setRecentEmojis(
-          LOCAL_STORAGE_RECENT,
-          [
-            ...recentEmojis,
-            { ...data, keywords: [], variations: [] },
-          ].sort((a, b) => (a.emoji > b.emoji ? -1 : 1))
-        );
+      if (data.variations && !variations[data.emoji]) {
+        togglePicker(e.currentTarget, data);
+        return;
       }
+      saveToRecentEmojis(data);
     }
-    onEmojiClick && onEmojiClick(data.emoji);
+    onEmojiClick(data.emoji);
   };
 
   return (
     <div
-      className={classNames("w-full h-full flex flex-col emoji-picker", mode)}
+      onClick={() => {
+        if (showPicker) {
+          setShowPicker(false);
+        }
+      }}
+      className={classNames(
+        "w-full h-full flex flex-col emoji-picker overflow-hidden",
+        mode
+      )}
     >
       <div
-        className="emoji-container"
+        className="dark:text-white w-full h-full flex flex-col bg-gray-100 dark:bg-primary-500"
         style={{
           backgroundColor: styles?.backgroundColor,
         }}
@@ -136,8 +185,8 @@ const Component: FC<EmojiPickerProps> = ({
           onChange={handleTabChange}
         />
 
-        <div className="overflow-hidden w-full h-full relative">
-          <span className="absolute left-0 right-3 pr-3 top-0 z-20 text-base">
+        <div className="w-full h-full relative">
+          <span className="absolute left-0 right-3 pr-3 top-0 z-20 text-base overflow-hidden">
             <CSSTransition
               in={showInput}
               timeout={500}
@@ -166,7 +215,29 @@ const Component: FC<EmojiPickerProps> = ({
             </CSSTransition>
           </span>
 
-          <div className="w-full px-3 relative h-full select-none">
+          <Picker
+            isOpen={showPicker}
+            boundaryElement={containerRef.current}
+            targetElement={emojiPicker.element}
+            emoji={emojiPicker.emoji}
+            styles={{
+              backgroundColor: styles?.variationPickerBackgroundColor,
+            }}
+            onEmojiClick={(emoji) => {
+              setShowPicker(false);
+              setVariations(LOCAL_STORAGE_VARIATION, {
+                ...variations,
+                [emojiPicker?.emoji!.emoji]: { emoji: emoji.emoji },
+              });
+              saveToRecentEmojis(emojiPicker.emoji!);
+              onEmojiClick(emoji.emoji);
+            }}
+          />
+
+          <div
+            ref={containerRef}
+            className="w-full px-3 relative h-full select-none"
+          >
             {resultEmojis && (
               <div className="emoji-list">
                 <div className="emoji-grid">
@@ -175,7 +246,9 @@ const Component: FC<EmojiPickerProps> = ({
                       key={`search-${data.emoji}`}
                       data={data}
                       onClick={(e) => handleEmojiClick(e, data)}
-                    />
+                    >
+                      {data.emoji}
+                    </EmojiButton>
                   ))}
                 </div>
               </div>
@@ -188,9 +261,9 @@ const Component: FC<EmojiPickerProps> = ({
               ref={scrollContentRef}
               onScroll={handleScroll}
               onWheel={(e) => {
-                const inThreshold = e.currentTarget.scrollTop % 2 === 0;
+                const inThreshold = e.currentTarget.scrollTop % 150 === 0;
                 if (!inThreshold) {
-                  return;
+                  setShowPicker(false);
                 }
 
                 if (e.nativeEvent.deltaY > 0) {
@@ -223,8 +296,15 @@ const Component: FC<EmojiPickerProps> = ({
                             <EmojiButton
                               key={`${name}-${data.emoji}-${index}`}
                               data={data}
+                              onLongPress={(e) => {
+                                if (data.variations) {
+                                  togglePicker(e, data);
+                                }
+                              }}
                               onClick={(e) => handleEmojiClick(e, data, id)}
-                            />
+                            >
+                              {variations[data.emoji]?.emoji || data.emoji}
+                            </EmojiButton>
                           ))}
                         </div>
                         <span
