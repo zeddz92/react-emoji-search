@@ -5,8 +5,9 @@ import { EMOJIS_VERSION, LOCAL_STORAGE_RECENT } from "../constants";
 import { getItem } from "./useLocalStorage";
 
 export const useLazyUnicodeEmoji = () => {
-  const [groupedEmojis, setGroupedEmojis] =
-    useState<Record<GroupedBy | "recent", BaseEmoji[] | undefined>>();
+  const [groupedEmojis, setGroupedEmojis] = useState<
+    Record<GroupedBy | "recent", BaseEmoji[] | undefined>
+  >();
 
   const [baseEmojis, setBaseEmojis] = useState<BaseEmoji[] | undefined>();
 
@@ -16,8 +17,6 @@ export const useLazyUnicodeEmoji = () => {
       const emojis = unicodeEmoji.getEmojisGroupedBy("category", {
         versionAbove: EMOJIS_VERSION,
       });
-
-      console.log(emojis);
 
       setGroupedEmojis({
         recent: recentEmojis || undefined,
