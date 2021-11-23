@@ -12,6 +12,7 @@ Emoji picker displayed just like Whatsapp.
 
 - Large emoji library
 - Customize with your own styles
+- Emojis skin tones
 - Recently used emojis support
 - `light` and `dark` mode
 
@@ -87,8 +88,8 @@ When you set styles, it will override `dark` and `light` mode colors
 
 # Future Features
 
+- [ x ] Support skin tones on emojis
 - [ ] Internationalization
 - [ ] Choose emojis platform, like apple, facebook or twitter
-- [ ] Support skin tones on emojis
 - [ ] Optimize emojis search
 - [ ] Support custom emojis
