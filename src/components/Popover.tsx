@@ -24,13 +24,13 @@ export const Popover: FC<PopoverProps> = ({
   const arrowRef = useRef<HTMLDivElement>(null);
 
   const boundaryWidth = boundaryElement?.clientWidth || 0;
+  const boundaryY = boundaryElement?.getBoundingClientRect().y || 0;
 
   const handlePopoverPosition = () => {
     if (targetElement && popoverRef.current) {
       const top =
-        targetElement.getBoundingClientRect().y +
-        window.scrollY -
-        boundaryElement!.getBoundingClientRect().y -
+        targetElement.getBoundingClientRect().y -
+        boundaryY -
         targetElement.offsetHeight * 1.9;
 
       popoverRef.current.style.setProperty("top", `${top}px`);
