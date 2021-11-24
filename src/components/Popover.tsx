@@ -28,9 +28,10 @@ export const Popover: FC<PopoverProps> = ({
   const handlePopoverPosition = () => {
     if (targetElement && popoverRef.current) {
       const top =
-        targetElement.getClientRects().item(0)!.top +
+        targetElement.getBoundingClientRect().y +
         window.scrollY -
-        targetElement.offsetHeight * 3.5;
+        boundaryElement!.getBoundingClientRect().y -
+        targetElement.offsetHeight * 1.9;
 
       popoverRef.current.style.setProperty("top", `${top}px`);
 
@@ -73,7 +74,7 @@ export const Popover: FC<PopoverProps> = ({
   }, [handlePopoverPosition]);
 
   return (
-    <div ref={popoverRef} className={"absolute left-8 z-20 shadow-md"}>
+    <div ref={popoverRef} className={"absolute left-8 z-20"}>
       <CSSTransition
         in={isOpen}
         timeout={{
@@ -89,7 +90,7 @@ export const Popover: FC<PopoverProps> = ({
           onClick={(e) => {
             e.stopPropagation();
           }}
-          className="rounded filter bg-picker-light dark:bg-picker-dark w-min relative select-none flex"
+          className="shadow-md rounded filter bg-picker-light dark:bg-picker-dark w-min relative select-none flex"
           style={{ backgroundColor: styles?.backgroundColor }}
         >
           {isOpen && (
