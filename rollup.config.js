@@ -1,10 +1,11 @@
 import babel from "@rollup/plugin-babel";
+import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
-import pkg from "./package.json";
 import postcss from "rollup-plugin-postcss";
-
 import { terser } from "rollup-plugin-terser";
+
+import pkg from "./package.json";
 
 // Array of extensions to be handled by babel
 const EXTENSIONS = [".ts", ".tsx"];
@@ -23,6 +24,7 @@ export default {
   },
   plugins: [
     peerDepsExternal(),
+    commonjs(),
     resolve({
       mainFields: ["module", "main", "jsnext:main", "browser"],
       extensions: [...EXTENSIONS, ".css"],
