@@ -10,7 +10,7 @@ export const getItem = <T>(key: string): T | null => {
 export function useLocalStorage<T = string>(
   key: string,
   defaultValue: T
-): [T, Function] {
+): [T, Function, Function] {
   const [state, setState] = useState<T>(defaultValue);
 
   useEffect(() => {
@@ -25,5 +25,10 @@ export function useLocalStorage<T = string>(
     localStorage.setItem(key, JSON.stringify(value));
   };
 
-  return [state, setItem];
+  const removeItem = (key: string) => {
+    setState(defaultValue);
+    localStorage.removeItem(key);
+  };
+
+  return [state, setItem, removeItem];
 }
