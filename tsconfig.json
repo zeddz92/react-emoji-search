@@ -2,11 +2,9 @@
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
-    "target": "es5",
-    "module": "esnext",
-    "lib": ["es5", "dom"],
+    "target": "es6",
     "types": ["jest"],
-    "allowJs": false,
+    "allowJs": true,
     "jsx": "react",
     "declaration": true,
     "declarationDir": "./dist",
