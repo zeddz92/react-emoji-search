@@ -1,6 +1,5 @@
 import classNames from "classnames";
-import React, { FC,useRef } from "react";
-import { Category } from "unicode-emoji";
+import React, { FC, useRef } from "react";
 import { useTabs } from "../utils/useTabs";
 
 import { ActivityIcon } from "../icons/ActivityIcon";
@@ -28,7 +27,7 @@ interface Props {
 }
 
 interface Tab {
-  id: Category | "recent";
+  id: string;
   name: string;
   icon: JSX.Element;
 }
@@ -90,8 +89,7 @@ export const Tabs: FC<Props> = ({
   styles,
 }) => {
   const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
-  const {indicatorState, showRecent} = useTabs(tabsRef, value)
-  
+  const { indicatorState, showRecent } = useTabs(tabsRef, value);
 
   const classes = classNames(
     "flex items-center text-gray-400 dark:text-primary-300 dark:shadow-sm h-full overflow-hidden",
@@ -101,11 +99,18 @@ export const Tabs: FC<Props> = ({
   );
 
   const { shouldAnimate, ...indicatorStyles } = indicatorState;
+
   return (
     <div className="relative w-full mb-1 text-base">
       <div className={classes}>
-        {categories.map((category, index) =>
-          category.id === "recent" && !showRecent ? null : (
+        {categories
+          .filter((category) => {
+            if (category.id === "recent" && !showRecent) {
+              return false;
+            }
+            return true;
+          })
+          .map((category, index) => (
             <button
               ref={(el) => {
                 tabsRef.current[index] = el;
@@ -128,8 +133,7 @@ export const Tabs: FC<Props> = ({
             >
               <span className="block">{category.icon}</span>
             </button>
-          )
-        )}
+          ))}
       </div>
 
       {showIndicator && (
