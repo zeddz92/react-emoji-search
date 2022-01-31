@@ -97,7 +97,11 @@ export const Popover: FC<PopoverProps> = ({
           {isOpen && (
             <>
               {children}
-              <div className="arrow" ref={arrowRef} />
+              <div
+                className="arrow"
+                style={{ borderTopColor: styles?.backgroundColor }}
+                ref={arrowRef}
+              />
             </>
           )}
         </div>
