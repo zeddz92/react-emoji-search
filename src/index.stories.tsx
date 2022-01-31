@@ -8,7 +8,7 @@ const meta: Meta<PropsWithChildren<{}>> = {
   component: EmojiPicker,
   argTypes: {
     set: {
-      defaultValue: "facebook",
+      defaultValue: "apple",
       control: {
         type: "select",
         labels: {
@@ -22,6 +22,7 @@ const meta: Meta<PropsWithChildren<{}>> = {
     },
     mode: { defaultValue: "dark" },
     quality: { defaultValue: "clean" },
+    sheetSize: { defaultValue: "64" },
     styles: {
       defaultValue: {
         backgroundColor: "...",
