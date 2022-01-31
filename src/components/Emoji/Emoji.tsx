@@ -2,7 +2,8 @@ import React, { FC, useEffect, useState } from "react";
 
 import emojis from "../../data/emojis";
 import { BaseEmoji, EmojiQuality, EmojiSet } from "../../types/emoji";
-import { EmojiImg } from "./EmojiImg";
+import { EmojiImg } from "./components/EmojiImg";
+import { EmojiNative } from "./components/EmojiNative";
 
 const notFoundEmoji = {
   native: "❓",
@@ -12,6 +13,7 @@ const notFoundEmoji = {
   facebook: 1,
   google: 1,
   twitter: 1,
+  img: "",
 };
 
 interface EmojiProps {
@@ -19,6 +21,7 @@ interface EmojiProps {
   quality?: EmojiQuality;
   size?: number;
   set?: EmojiSet;
+  sheetSize?: number;
 }
 
 export const Emoji: FC<EmojiProps> = ({
@@ -30,6 +33,7 @@ export const Emoji: FC<EmojiProps> = ({
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
+    //TODO: extract find emoji logic
     let found = false;
     for (let i = 0; i < emojis.length; i++) {
       const emoji = emojis[i];
@@ -68,7 +72,7 @@ export const Emoji: FC<EmojiProps> = ({
   }
 
   if (set === "native") {
-    return <>{emoji.native}</>;
+    return <EmojiNative emoji={emoji.native} />;
   }
 
   return <EmojiImg emoji={emoji} set={set} {...config} />;
