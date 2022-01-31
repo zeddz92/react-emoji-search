@@ -29,8 +29,7 @@ export const useTabs = (
     if (localStorage.getItem(LOCAL_STORAGE_RECENT)) {
       setShowRecent(true);
     }
-    // Position 0 is for recent and might not be displayed
-    const tab = tabsRef.current[1];
+    const tab = tabsRef.current[0];
     if (tab) {
       setIndicatorState({
         ...indicatorState,
