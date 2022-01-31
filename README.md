@@ -11,6 +11,7 @@ Emoji picker displayed just like Whatsapp.
 ### Features:
 
 - Fully customizable
+- Faster load for high quality emojis
 - Emojis skin tones
 - Recently used emojis support
 - Emoji sets: `facebook`, `apple`, `google` and `twitter`
@@ -39,16 +40,19 @@ import React from "react";
 import { EmojiPicker, Emoji } from "react-emoji-search";
 
 <EmojiPicker set="apple" />
+
+<EmojiPicker set="apple" emojiSize={24} emojiSpacing={8}/>
+<EmojiPicker emojiVersion={12.0}/>
 <EmojiPicker onEmojiClick={(emoji) => setEmoji(emoji)} />
 <EmojiPicker
   styles={{
-    backgroundColor: "#772CE8",
-    indicatorColor: "#69FFC3",
-    fontColor: "white",
-    tabsFontColor: "lightgrey",
+    backgroundColor: "#2e4960",
+    indicatorColor: "#b04c2d",
+    fontColor: "lightgrey",
+    searchBackgroundColor: "#263d51",
+    tabsFontColor: "#8cdce4",
     searchFontColor: "lightgrey",
-    searchBackgroundColor: "lightgrey",
-    variationPickerBackgroundColor: "red",
+    skinTonePickerBackgroundColor: "#284155",
   }}
 />
 ```
@@ -58,6 +62,10 @@ import { EmojiPicker, Emoji } from "react-emoji-search";
 | Name         | Type     | Default     | Description                                                                       |
 | :----------- | :------- | :---------- | :-------------------------------------------------------------------------------- |
 | set          | string   | apple       | Emoji icon set: `apple`,`facebook`,`twitter`,`google`, `native`                   |
+| emojiSize    | number   | 32          | Emojis size for the picker                                                        |
+| sheetSize    | string   | 64          | The emoji sheet sizes are: `32`,`64`                                              |
+| emojiSpacing | number   | 12          | Gap between emojis                                                                |
+| emojiVersion | number   | 12.1        | version of the emoji list                                                         |
 | quality      | string   | clean       | quality of the spreadsheet; `128`,`256`,`clean`                                   |
 | mode         | string   | dark        | Switch between `dark` and `light`                                                 |
 | onEmojiClick | Function | `undefined` | Returns the native emoji                                                          |
@@ -86,10 +94,10 @@ The sprite sheets comes from `jsDelivr` thanks to [emoji-datasource](https://www
 
 You can check the used sprite sheets through these links:
 
-- [apple](https://cdn.jsdelivr.net/npm/emoji-datasource-apple@7.0.2/img/apple/)
-- [facebook](https://cdn.jsdelivr.net/npm/emoji-datasource-facebook@7.0.2/img/facebook/)
-- [twitter](https://cdn.jsdelivr.net/npm/emoji-datasource-twitter@7.0.2/img/twitter/)
-- [google](https://cdn.jsdelivr.net/npm/emoji-datasource-google@7.0.2/img/google/)
+- [apple](https://cdn.jsdelivr.net/npm/emoji-datasource-apple-split/img/)
+- [facebook](https://cdn.jsdelivr.net/npm/emoji-datasource-facebook-split/img/)
+- [twitter](https://cdn.jsdelivr.net/npm/emoji-datasource-twitter-split/img/)
+- [google](https://cdn.jsdelivr.net/npm/emoji-datasource-google-split/img/)
 
 ## Emoji
 
