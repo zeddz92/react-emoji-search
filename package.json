@@ -1,8 +1,10 @@
 {
   "name": "react-emoji-search",
-  "version": "1.1.9",
-  "description": "",
-  "main": "dist/src/index.js",
+  "version": "2.2.3",
+  "description": "Whatsapp like emoji picker",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
   "types": "dist",
   "scripts": {
     "build": "tsc --emitDeclarationOnly && rollup --config",
@@ -18,14 +20,9 @@
   },
   "author": "zeddz92",
   "keywords": [
-    "react",
     "emoji",
     "picker",
-    "emoji-picker",
-    "emoji-search",
-    "emojis",
-    "unicode",
-    "whatsapp"
+    "react"
   ],
   "license": "MIT",
   "bugs": {
@@ -58,7 +55,7 @@
     "@storybook/addon-essentials": "^6.3.5",
     "@storybook/addon-links": "^6.3.5",
     "@storybook/react": "^6.3.5",
-    "@testing-library/react": "^12.0.0",
+    "@testing-library/react": "^12.1.2",
     "@types/jest": "^26.0.24",
     "@types/react": "^17.0.14",
     "@types/react-transition-group": "^4.4.4",
