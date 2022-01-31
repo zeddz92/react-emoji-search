@@ -19,10 +19,25 @@ export interface BaseEmoji {
   native: string;
   sheetX: number;
   sheetY: number;
+  img: string;
 }
 
 export type EmojiSet = "native" | "google" | "apple" | "facebook" | "twitter";
 export type EmojiQuality = "clean" | "128" | "256";
+export type Version =
+  | 0.6
+  | 0.7
+  | 1.0
+  | 2.0
+  | 3.0
+  | 4.0
+  | 5.0
+  | 11.0
+  | 12.0
+  | 12.1
+  | 13.0
+  | 13.1
+  | 14.0;
 
 export interface Emoji {
   google: number;
@@ -36,4 +51,5 @@ export interface Emoji {
   name: string;
   sortOrder: number;
   skinVariations?: BaseEmoji[];
+  img: string;
 }
