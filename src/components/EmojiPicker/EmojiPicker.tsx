@@ -1,24 +1,41 @@
-import "./styles.css";
+import "../../styles.css";
 
 import classNames from "classnames";
 import inView from "element-in-view";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
+import { Emoji, EmojiQuality, EmojiSet, Version } from "types/emoji";
 import { Styles } from "types/styles";
 import { BaseEmoji } from "unicode-emoji";
 
-import { EmojiButton } from "./components/EmojiButton";
-import { Picker } from "./components/Picker";
-import { categories, Tabs } from "./components/Tabs";
-import { LOCAL_STORAGE_RECENT, LOCAL_STORAGE_VARIATION } from "./constants";
-import { smoothScroll } from "./utils/smoothScroll";
-import { useLazyUnicodeEmoji } from "./utils/useLazyUnicodeEmoji";
-import { useLocalStorage } from "./utils/useLocalStorage";
+import {
+  categories,
+  LOCAL_STORAGE_RECENT,
+  LOCAL_STORAGE_VARIATION,
+} from "../../constants";
+import {
+  getGroupedEmojis,
+  GroupedEmojis,
+  searchEmoji,
+} from "../../utils/getEmojis";
+import { smoothScroll } from "../../utils/smoothScroll";
+import { useLocalStorage } from "../../utils/useLocalStorage";
+import { Button } from "../Button";
+import { SkinTonePicker } from "../SkinTonePicker";
+import { Tabs } from "../Tabs/Tabs";
+import { Emoji as EmojiComponent } from "./components/Emoji";
+import { EmojiGrid } from "./components/EmojiGrid";
 
 interface EmojiPickerProps {
   mode?: "dark" | "light";
+  emojiSize?: number;
+  sheetSize?: 32 | 64;
+  emojiSpacing?: number;
+  set?: EmojiSet;
+  quality?: EmojiQuality;
   tabsVariant?: "fullWidth" | "default";
   onEmojiClick?(emoji: string): void;
+  emojiVersion?: Version;
   styles?: Styles;
 }
 
@@ -28,14 +45,18 @@ interface Emoji {
 
 const Component: FC<EmojiPickerProps> = ({
   tabsVariant = "default",
-  mode = "light",
+  mode = "dark",
+  set = "apple",
+  emojiVersion = 12.0,
+  emojiSpacing = 12,
+  emojiSize = 32,
+  sheetSize = 64,
+  quality = "clean",
   onEmojiClick = () => {},
   styles,
 }) => {
   const { baseEmojis, groupedEmojis } = useLazyUnicodeEmoji();
 
-  const scrollContentRef = useRef<HTMLDivElement>(null);
-  const categoriesScrollRef = useRef<(HTMLSpanElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [recentEmojis, setRecentEmojis] = useLocalStorage<Emoji[]>(
@@ -79,7 +100,12 @@ const Component: FC<EmojiPickerProps> = ({
     } else {
       setResultEmojis(undefined);
     }
-  }, [search]);
+  }, [recentEmojis, variations]);
+
+  useEffect(() => {
+    const groupedEmojis = getGroupedEmojis(set, emojiVersion);
+    setGroupedEmojis(groupedEmojis);
+  }, [set, emojiVersion]);
 
   const handleScroll = useCallback(
     (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
@@ -98,22 +124,47 @@ const Component: FC<EmojiPickerProps> = ({
     []
   );
 
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value;
+
+    setTimeout(() => {
+      if (value.trim()) {
+        const search = value.toLowerCase();
+        const searchResult = searchEmoji(search, set, emojiVersion);
+        setResultEmojis(searchResult);
+      } else {
+        setResultEmojis(undefined);
+      }
+    }, 0);
+  }, []);
+
   const handleTabChange = (
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    tab: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     newValue: number
   ) => {
-    setSearch("");
-    setTabIndex(newValue);
-    setTimeout(() => {
-      setShowInput(true);
+    const id = tab.currentTarget.getAttribute("data-id");
+    if (!id) {
+      return;
+    }
+    const doc = tab.currentTarget.ownerDocument;
+    const categoryElement = doc.querySelector(`#category-${id}`);
+    if (categoryElement) {
+      setTabIndex(newValue);
 
-      scrollContentRef.current?.classList.add("scrolling");
-      const categoryElement = categoriesScrollRef.current[newValue]!;
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.value = "";
+          setResultEmojis(undefined);
+        }
+        setShowInput(true);
 
-      smoothScroll(categoryElement, scrollContentRef.current!).then(() => {
-        scrollContentRef.current?.classList.remove("scrolling");
-      });
-    }, 0);
+        scrollContentRef.current?.classList.add("scrolling");
+
+        smoothScroll(categoryElement, scrollContentRef.current!).then(() => {
+          scrollContentRef.current?.classList.remove("scrolling");
+        });
+      }, 0);
+    }
   };
 
   const togglePicker = (element: HTMLButtonElement, data: BaseEmoji) => {
@@ -155,6 +206,8 @@ const Component: FC<EmojiPickerProps> = ({
     }
     onEmojiClick(data.emoji);
   };
+
+  const columns = `repeat(auto-fill, minmax(min(${emojiSize}px, 100%), 1fr))`;
 
   return (
     <div
@@ -201,7 +254,8 @@ const Component: FC<EmojiPickerProps> = ({
                 }}
               >
                 <input
-                  value={search}
+                  data-testid="search-input"
+                  ref={searchInputRef}
                   type="search"
                   className="cancel-button w-full rounded px-3 py-2 text-gray-600 dark:text-white bg-gray-200 dark:bg-primary-400 outline-none"
                   placeholder="Search Emoji"
@@ -217,11 +271,14 @@ const Component: FC<EmojiPickerProps> = ({
 
           <Picker
             isOpen={showPicker}
+            set={set}
+            emojiSize={emojiSize}
+            sheetSize={sheetSize}
             boundaryElement={containerRef.current}
             targetElement={emojiPicker.element}
             emoji={emojiPicker.emoji}
             styles={{
-              backgroundColor: styles?.variationPickerBackgroundColor,
+              backgroundColor: styles?.skinTonePickerBackgroundColor,
             }}
             onEmojiClick={(emoji) => {
               setShowPicker(false);
@@ -239,22 +296,30 @@ const Component: FC<EmojiPickerProps> = ({
             className="w-full px-3 relative h-full select-none"
           >
             {resultEmojis && (
-              <div className="emoji-list">
-                <div className="emoji-grid">
+              <div data-testid="result-emojis" className="emoji-list">
+                <EmojiGrid emojiSize={emojiSize} emojiSpacing={emojiSpacing}>
                   {resultEmojis.map((data) => (
                     <EmojiButton
                       key={`search-${data.emoji}`}
                       data={data}
                       onClick={(e) => handleEmojiClick(e, data)}
                     >
-                      {data.emoji}
-                    </EmojiButton>
+                      <EmojiComponent
+                        size={emojiSize}
+                        sheetSize={sheetSize}
+                        set={set}
+                        data={variations[data.native] || data}
+                        quality={quality}
+                      />
+                    </Button>
                   ))}
-                </div>
+                </EmojiGrid>
               </div>
             )}
 
             <div
+              id="emoji-list"
+              data-testid="emoji-list"
               className={classNames("emoji-list", {
                 hidden: !!resultEmojis,
               })}
@@ -273,47 +338,43 @@ const Component: FC<EmojiPickerProps> = ({
                 }
               }}
             >
-              {groupedEmojis &&
-                categories.map(
-                  ({ id, name }, index) =>
-                    groupedEmojis[id] && (
-                      <div key={id} className="mb-6 relative">
-                        <div
-                          className="text-left emoji-category text-gray-400 dark:text-secondary-100 text-sm mb-2"
-                          style={{ color: styles?.fontColor }}
-                        >
-                          {name}
-                        </div>
-                        <span
-                          ref={(el) => {
-                            categoriesScrollRef.current[index] = el;
-                          }}
-                          // Match top with parent padding-top
-                          className="absolute -top-15"
-                        ></span>
-                        <div className="emoji-grid">
-                          {groupedEmojis[id]!.map((data) => (
-                            <EmojiButton
-                              key={`${name}-${data.emoji}-${index}`}
-                              data={data}
-                              onLongPress={(e) => {
-                                if (data.variations) {
-                                  togglePicker(e, data);
-                                }
-                              }}
-                              onClick={(e) => handleEmojiClick(e, data, id)}
-                            >
-                              {variations[data.emoji]?.emoji || data.emoji}
-                            </EmojiButton>
-                          ))}
-                        </div>
-                        <span
-                          data-category={id}
-                          className="emoji-category-bottom absolute top-60"
+              {Object.entries(groupedEmojis).map(([key, emojis], index) => (
+                <div key={key} className="mb-6 relative emoji-category">
+                  <div
+                    className="text-left  text-gray-400 dark:text-secondary-100 text-sm mb-2"
+                    style={{ color: styles?.fontColor }}
+                  >
+                    {key}
+                  </div>
+                  <span
+                    id={`category-${categories[key]}`}
+                    // Match top with parent padding-top
+                    className="absolute -top-15"
+                  ></span>
+                  <EmojiGrid emojiSize={emojiSize} emojiSpacing={emojiSpacing}>
+                    {emojis?.map((data) => (
+                      <Button
+                        testId={`${key}-emoji`}
+                        key={`emoji-${data.native}`}
+                        onLongPress={(e) => {
+                          if (data.skinVariations) {
+                            togglePicker(e, data);
+                          }
+                        }}
+                        onClick={(e) => handleEmojiClick(e, data)}
+                      >
+                        <EmojiComponent
+                          size={emojiSize}
+                          sheetSize={sheetSize}
+                          set={set}
+                          quality={quality}
+                          data={variations[data.native] || data}
                         />
-                      </div>
-                    )
-                )}
+                      </Button>
+                    ))}
+                  </EmojiGrid>
+                </div>
+              ))}
             </div>
           </div>
         </div>
