@@ -1,20 +1,21 @@
 import emojis from "../data/emojis";
-import { Emoji, EmojiSet } from "../types/emoji";
+import { Emoji, EmojiSet, Version } from "../types/emoji";
 import { getRecentEmojis } from "./getRecentEmojis";
 
 export interface GroupedEmojis {
-  [key: string]: Emoji[] | undefined;
+  [key: string]: Emoji[];
 }
 
-export const searchEmoji = (text: string, set: EmojiSet) => {
+export const searchEmoji = (text: string, set: EmojiSet, version: Version) => {
   return emojis.filter(
     (emoji) =>
       (set === "native" || emoji[set] === 1) &&
-      emoji.keywords.some((word: string) => word.startsWith(text))
+      emoji.version <= version &&
+      emoji.keywords?.some((word: string) => word.startsWith(text))
   );
 };
 
-export const getGroupedEmojis = (set: EmojiSet) => {
+export const getGroupedEmojis = (set: EmojiSet, version: Version) => {
   const defaultGroupedEmojisValue = {
     Recent: getRecentEmojis(emojis, set),
     "Smileys & People": [],
@@ -32,10 +33,13 @@ export const getGroupedEmojis = (set: EmojiSet) => {
       return acc;
     }
 
-    acc[emoji.category]?.push(emoji);
+    if (emoji.version && emoji.version <= version) {
+      acc[emoji.category].push(emoji);
+    }
 
     return acc;
   }, defaultGroupedEmojisValue);
+
   if (!result.Recent) {
     delete result["Recent"];
   }
