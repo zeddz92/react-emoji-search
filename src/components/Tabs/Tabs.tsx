@@ -1,17 +1,16 @@
 import classNames from "classnames";
-import React, { FC,useRef } from "react";
-import { Category } from "unicode-emoji";
-import { useTabs } from "../utils/useTabs";
+import React, { FC, useRef } from "react";
+import { useTabs } from "../../utils/useTabs";
 
-import { ActivityIcon } from "../icons/ActivityIcon";
-import { FlagsIcon } from "../icons/FlagsIcon";
-import { FoodIcon } from "../icons/FoodIcon";
-import { NatureIcon } from "../icons/NatureIcon";
-import { ObjectsIcon } from "../icons/ObjectsIcon";
-import { PeopleIcon } from "../icons/PeopleIcon";
-import { RecentIcon } from "../icons/RecentIcon";
-import { SymbolsIcon } from "../icons/SymbolsIcon";
-import { TravelIcon } from "../icons/TravelIcon";
+import { ActivityIcon } from "../../icons/ActivityIcon";
+import { FlagsIcon } from "../../icons/FlagsIcon";
+import { FoodIcon } from "../../icons/FoodIcon";
+import { NatureIcon } from "../../icons/NatureIcon";
+import { ObjectsIcon } from "../../icons/ObjectsIcon";
+import { PeopleIcon } from "../../icons/PeopleIcon";
+import { RecentIcon } from "../../icons/RecentIcon";
+import { SymbolsIcon } from "../../icons/SymbolsIcon";
+import { TravelIcon } from "../../icons/TravelIcon";
 
 interface Props {
   variant?: "fullWidth" | "default";
@@ -28,7 +27,7 @@ interface Props {
 }
 
 interface Tab {
-  id: Category | "recent";
+  id: string;
   name: string;
   icon: JSX.Element;
 }
@@ -40,7 +39,7 @@ export const categories: Tab[] = [
     icon: <RecentIcon />,
   },
   {
-    id: "face-emotion",
+    id: "smileys-people",
     name: "Smileys & People",
     icon: <PeopleIcon />,
   },
@@ -55,7 +54,7 @@ export const categories: Tab[] = [
     icon: <FoodIcon />,
   },
   {
-    id: "activities-events",
+    id: "activity",
     name: "Activity",
     icon: <ActivityIcon />,
   },
@@ -90,8 +89,7 @@ export const Tabs: FC<Props> = ({
   styles,
 }) => {
   const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
-  const {indicatorState, showRecent} = useTabs(tabsRef, value)
-  
+  const { indicatorState, showRecent } = useTabs(tabsRef, value);
 
   const classes = classNames(
     "flex items-center text-gray-400 dark:text-primary-300 dark:shadow-sm h-full overflow-hidden",
@@ -101,11 +99,18 @@ export const Tabs: FC<Props> = ({
   );
 
   const { shouldAnimate, ...indicatorStyles } = indicatorState;
+
   return (
     <div className="relative w-full mb-1 text-base">
-      <div className={classes}>
-        {categories.map((category, index) =>
-          category.id === "recent" && !showRecent ? null : (
+      <div data-testid="tabs" className={classes}>
+        {categories
+          .filter((category) => {
+            if (category.id === "recent" && !showRecent) {
+              return false;
+            }
+            return true;
+          })
+          .map((category, index) => (
             <button
               ref={(el) => {
                 tabsRef.current[index] = el;
@@ -128,12 +133,12 @@ export const Tabs: FC<Props> = ({
             >
               <span className="block">{category.icon}</span>
             </button>
-          )
-        )}
+          ))}
       </div>
 
       {showIndicator && (
         <span
+          data-testid="indicator"
           className={classNames("h-1 bg-green-600 block absolute", {
             indicator: shouldAnimate && showIndicator,
           })}

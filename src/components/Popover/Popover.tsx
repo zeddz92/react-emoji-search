@@ -1,4 +1,4 @@
-import React, { FC, useLayoutEffect, useRef } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import { CSSTransition } from "react-transition-group";
 
 export interface PopoverProps {
@@ -43,7 +43,7 @@ export const Popover: FC<PopoverProps> = ({
       ) {
         popoverRef.current.style.setProperty(
           "left",
-          `${targetElement.offsetLeft + arrowSize}px`
+          `${targetElement.offsetLeft + arrowSize - 6}px`
         );
 
         arrowRef.current?.style.removeProperty("right");
@@ -55,7 +55,8 @@ export const Popover: FC<PopoverProps> = ({
             targetElement.offsetLeft -
             popoverRef.current.offsetWidth +
             targetElement.offsetWidth +
-            arrowSize
+            arrowSize +
+            6
           }px`
         );
 
@@ -65,7 +66,7 @@ export const Popover: FC<PopoverProps> = ({
     }
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     window.addEventListener("resize", handlePopoverPosition);
 
     return () => {
@@ -96,7 +97,11 @@ export const Popover: FC<PopoverProps> = ({
           {isOpen && (
             <>
               {children}
-              <div className="arrow" ref={arrowRef} />
+              <div
+                className="arrow"
+                style={{ borderTopColor: styles?.backgroundColor }}
+                ref={arrowRef}
+              />
             </>
           )}
         </div>

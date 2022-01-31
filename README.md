@@ -4,16 +4,17 @@ Emoji picker displayed just like Whatsapp.
 
 [Demo](https://moji-search.herokuapp.com/)
 
-<div style="display: flex; align-items:center; height: 280px; justify-content: between; margin: 15px 0;">
-<img src="https://user-images.githubusercontent.com/8311115/142978462-db060fdc-c117-4d5d-a01a-7f65885bbc0c.png" style=""/>
+<div style="display: flex; align-items:center; height: 320px; justify-content: between; margin: 15px 0;">
+<img src="https://user-images.githubusercontent.com/8311115/147536323-e3324649-6266-41b0-be56-5b0128b42d8b.gif" style=""/>
 </div>
 
 ### Features:
 
-- Large emoji library
-- Customize with your own styles
+- Fully customizable
+- Faster load for high quality emojis
 - Emojis skin tones
 - Recently used emojis support
+- Emoji sets: `facebook`, `apple`, `google` and `twitter`
 - `light` and `dark` mode
 
 <a href="https://www.buymeacoffee.com/zeddz" style="margin: 20px 0; display: block;">
@@ -32,40 +33,42 @@ npm install react-emoji-search
 
 # Usage
 
+## Emoji Picker
+
 ```javascript
-import React, { useState } from "react";
-import EmojiPicker from "react-emoji-search";
+import React from "react";
+import { EmojiPicker, Emoji } from "react-emoji-search";
 
-const Example = () => {
-  const [emoji, setEmoji] = useState("😀️");
+<EmojiPicker set="apple" />
 
-  return (
-    <div>
-      <div>{emoji}</div>
-      <EmojiPicker
-        tabsVariant="fullWidth"
-        styles={{
-          backgroundColor: "#772CE8",
-          indicatorColor: "#69FFC3",
-          fontColor: "white",
-          tabsFontColor: "lightgrey",
-          searchFontColor: "lightgrey",
-        }}
-        onEmojiClick={(emoji) => {
-          setEmoji(emoji);
-        }}
-      />
-    </div>
-  );
-};
+<EmojiPicker set="apple" emojiSize={24} emojiSpacing={8}/>
+<EmojiPicker emojiVersion={12.0}/>
+<EmojiPicker onEmojiClick={(emoji) => setEmoji(emoji)} />
+<EmojiPicker
+  styles={{
+    backgroundColor: "#2e4960",
+    indicatorColor: "#b04c2d",
+    fontColor: "lightgrey",
+    searchBackgroundColor: "#263d51",
+    tabsFontColor: "#8cdce4",
+    searchFontColor: "lightgrey",
+    skinTonePickerBackgroundColor: "#284155",
+  }}
+/>
 ```
 
 ### Properties
 
 | Name         | Type     | Default     | Description                                                                       |
 | :----------- | :------- | :---------- | :-------------------------------------------------------------------------------- |
-| mode         | string   | light       | Switch between `dark` and `light`                                                 |
-| onEmojiClick | Function | `undefined` | Function returning the picked emoji                                               |
+| set          | string   | apple       | Emoji icon set: `apple`,`facebook`,`twitter`,`google`, `native`                   |
+| emojiSize    | number   | 32          | Emojis size for the picker                                                        |
+| sheetSize    | string   | 64          | The emoji sheet sizes are: `32`,`64`                                              |
+| emojiSpacing | number   | 12          | Gap between emojis                                                                |
+| emojiVersion | number   | 12.1        | version of the emoji list                                                         |
+| quality      | string   | clean       | quality of the spreadsheet; `128`,`256`,`clean`                                   |
+| mode         | string   | dark        | Switch between `dark` and `light`                                                 |
+| onEmojiClick | Function | `undefined` | Returns the native emoji                                                          |
 | tabsVariant  | string   | default     | Set to `fullWidth` or `default`                                                   |
 | styles       | Object   | `undefined` | Customize the picker elements such as indicator color, background color and fonts |
 
@@ -81,15 +84,42 @@ You can make the picker adjust to your needs with the following props:
   fontColor: "...",
   tabsFontColor: "...",
   searchFontColor: "...",
+  variationPickerBackgroundColor: "...",
 }
 ```
 
+### Sprite Sheets
+
+The sprite sheets comes from `jsDelivr` thanks to [emoji-datasource](https://www.npmjs.com/package/emoji-datasource) package.
+
+You can check the used sprite sheets through these links:
+
+- [apple](https://cdn.jsdelivr.net/npm/emoji-datasource-apple-split/img/)
+- [facebook](https://cdn.jsdelivr.net/npm/emoji-datasource-facebook-split/img/)
+- [twitter](https://cdn.jsdelivr.net/npm/emoji-datasource-twitter-split/img/)
+- [google](https://cdn.jsdelivr.net/npm/emoji-datasource-google-split/img/)
+
+## Emoji
+
+Get emoji from native. This component will attempt to find
+the emoji and render from the specified set. If not found it will render interrogation emoji (❓).
+
+```javascript
+import React from "react";
+import { Emoji } from "react-emoji-search";
+
+<Emoji unicode="✌🏽" />
+<Emoji unicode="🥸" set="facebook" size={24} />
+<Emoji unicode="👀" set="twitter" quality="256" />
+```
+
+### Properties
+
+| Name    | Type   | Default | Description                                                     |
+| :------ | :----- | :------ | :-------------------------------------------------------------- |
+| unicode | string |         | Native emoji                                                    |
+| size    | number | 32      | Width and height of the emoji                                   |
+| set     | string | apple   | Emoji icon set: `apple`,`facebook`,`twitter`,`google`, `native` |
+| quality | string | clean   | quality of the spreadsheet; `128`,`256`,`clean`                 |
+
 When you set styles, it will override `dark` and `light` mode colors
-
-# Future Features
-
-- [ x ] Support skin tones on emojis
-- [ ] Internationalization
-- [ ] Choose emojis platform, like apple, facebook or twitter
-- [ ] Optimize emojis search
-- [ ] Support custom emojis

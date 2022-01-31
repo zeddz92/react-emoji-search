@@ -9,7 +9,7 @@ module.exports = {
         "-15": "-3.875rem",
       },
       gridTemplateColumns: {
-        flow: "repeat(auto-fill, minmax(min(44px, 100%), 1fr))",
+        flow: "repeat(auto-fill, minmax(min(38px, 100%), 1fr))",
       },
       colors: {
         primary: {

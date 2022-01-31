@@ -1,30 +1,53 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useState } from "react";
 import { Meta, Story } from "@storybook/react";
-import Component from "./index";
+import { EmojiPicker, Emoji } from "./index";
+import { EmojiSet } from "types/emoji";
 
 const meta: Meta<PropsWithChildren<{}>> = {
   title: "My Component",
-  component: Component,
+  component: EmojiPicker,
   argTypes: {
-    children: {
-      description: "Content or elements to be rendered inside the Component",
+    set: {
+      defaultValue: "apple",
       control: {
-        type: "text",
+        type: "select",
+        labels: {
+          native: "Native",
+          apple: "Apple",
+          google: "Google",
+          facebook: "Facebook",
+          twitter: "Twitter",
+        },
+      },
+    },
+    mode: { defaultValue: "dark" },
+    quality: { defaultValue: "clean" },
+    sheetSize: { defaultValue: "64" },
+    styles: {
+      defaultValue: {
+        backgroundColor: "...",
+        indicatorColor: "...",
+        fontColor: "...",
+        tabsFontColor: "...",
+        searchFontColor: "...",
+        variationPickerBackgroundColor: "...",
       },
     },
   },
 };
 
-const Template: Story<PropsWithChildren<{}>> = (args) => (
-  <div style={{ height: 400 }}>
-    <Component {...args} />
-  </div>
-);
+const Template: Story<PropsWithChildren<{ set: EmojiSet }>> = (args) => {
+  return (
+    <>
+      <div style={{ height: 500 }}>
+        <EmojiPicker {...args} tabsVariant="fullWidth" mode="dark" />
+      </div>
+    </>
+  );
+};
 
 const Basic = Template.bind({});
-Basic.args = {
-  children: "Component",
-};
+Basic.args = {};
 
 export default meta;
 export { Basic };

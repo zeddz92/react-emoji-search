@@ -6,17 +6,30 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.emoji-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: 510% 510%;
+  image-rendering: -webkit-optimize-contrast;
+}
+
 .indicator {
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   width: 96px;
 }
 
 .emoji-list {
-  @apply pt-15 overflow-y-scroll overflow-x-hidden h-full relative flex flex-col;
+  @apply py-15 overflow-y-scroll overflow-x-hidden h-full relative;
+}
+
+.emoji-grid button {
+  display: inline-flex;
 }
 
 .emoji-grid {
-  @apply grid grid-cols-flow gap-y-2 md:gap-y-2.5 pr-5 md:pr-4;
+  @apply grid pr-5 md:pr-4 place-items-center;
 }
 
 .cancel-button::-webkit-search-cancel-button {
@@ -98,4 +111,8 @@
 
 .dark .arrow {
   border-top: solid 10px theme("colors.picker.dark");
+}
+
+.emoji-native {
+  line-height: normal;
 }
