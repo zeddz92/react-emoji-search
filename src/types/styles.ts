@@ -5,5 +5,5 @@ export interface Styles {
   tabsFontColor?: string;
   searchFontColor?: string;
   searchBackgroundColor?: string;
-  variationPickerBackgroundColor?: string;
+  skinTonePickerBackgroundColor?: string;
 }
