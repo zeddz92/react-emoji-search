@@ -15,7 +15,7 @@ const _sortByFrequency = (a: [string, number], b: [string, number]) => {
 export const getRecentEmojis = (emojis: Emoji[], set: EmojiSet) => {
   const recentEmojis = getItem<{ [key: string]: number }>(LOCAL_STORAGE_RECENT);
   if (!recentEmojis) {
-    return undefined;
+    return [];
   }
   return Object.entries(recentEmojis)
     .sort(_sortByFrequency)
