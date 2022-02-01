@@ -1,10 +1,10 @@
-import React, { FC, useRef, useState } from "react";
+import React, { FC, MouseEvent, TouchEvent, useRef, useState } from "react";
 
 interface ButtonProps {
   testId?: string;
   style?: React.CSSProperties;
   onLongPress?(e: HTMLButtonElement): void;
-  onClick?(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
+  onClick?(e: MouseEvent<HTMLButtonElement>): void;
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -19,9 +19,13 @@ export const Button: FC<ButtonProps> = ({
 
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const start = function (e: any) {
-    if (e.type === "click" && e.button !== 0) {
-      e.stop;
+  const start = function (
+    e: MouseEvent<HTMLButtonElement> | TouchEvent<HTMLButtonElement>
+  ) {
+    const event = e as MouseEvent<HTMLButtonElement>;
+
+    if (event.type === "click" && event.button !== 0) {
+      event.stopPropagation();
       return;
     }
     setIsLongPress(false);
@@ -29,14 +33,14 @@ export const Button: FC<ButtonProps> = ({
     setPressTimer(
       setTimeout(function () {
         setIsLongPress(true);
-        onLongPress && onLongPress(buttonRef.current!);
+        buttonRef.current && onLongPress && onLongPress(buttonRef.current);
       }, 250)
     );
 
     return false;
   };
 
-  const cancel = function (e: any) {
+  const cancel = function () {
     if (pressTimer !== null) {
       clearTimeout(pressTimer);
       setPressTimer(null);
