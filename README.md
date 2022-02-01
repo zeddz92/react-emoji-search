@@ -1,8 +1,13 @@
 # React emoji search
 
+<div align="center">
 Emoji picker displayed just like Whatsapp.
 
 [Demo](https://moji-search.herokuapp.com/)
+<br/><br/>
+<a style="margin-right: 8px;" href="https://app.travis-ci.com/zeddz92/react-emoji-search"><img src="https://app.travis-ci.com/zeddz92/react-emoji-search.png?branch=main" alt="Build Status"></a><a style="margin-right: 8px;" href="https://snyk.io/test/github/zeddz92/react-emoji-search?targetFile=package.json"><img src="https://snyk.io/test/github/zeddz92/react-emoji-search/badge.svg?targetFile=package.json" alt="Build Status"></a><a href="https://codecov.io/github/zeddz92/react-emoji-search?branch=main"><img src="https://img.shields.io/codecov/c/github/zeddz92/react-emoji-search.svg?maxAge=2592000" alt="Build Status"></a>
+
+</div>
 
 <div style="display: flex; align-items:center; height: 320px; justify-content: between; margin: 15px 0;">
 <img src="https://user-images.githubusercontent.com/8311115/147536323-e3324649-6266-41b0-be56-5b0128b42d8b.gif" style=""/>
