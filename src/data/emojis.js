@@ -40946,8 +40946,7 @@ export default [
     facebook: 1,
     apple: 1,
     native: "🔂",
-    name:
-      "clockwise rightwards and leftwards open circle arrows with circled one overlay",
+    name: "clockwise rightwards and leftwards open circle arrows with circled one overlay",
     category: "Symbols",
     sortOrder: 1403,
     keywords: ["arrow", "clockwise", "once", "repeat single button"],
