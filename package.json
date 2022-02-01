@@ -11,7 +11,7 @@
     "build": "rollup --config",
     "lint": "eslint --ext .ts --ext .tsx --ext .js --ext .jsx src/",
     "tsc": "tsc",
-    "test": "jest",
+    "test": "jest --coverage",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "prepublishOnly": "npm run lint && npm run build"
