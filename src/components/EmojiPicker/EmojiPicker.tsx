@@ -3,7 +3,7 @@ import "../../styles.css";
 import classNames from "classnames";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
-import { Emoji, EmojiQuality, EmojiSet, Version } from "types/emoji";
+import { BaseEmoji, Emoji, EmojiQuality, EmojiSet, Version } from "types/emoji";
 import { Styles } from "types/styles";
 
 import {
@@ -24,7 +24,7 @@ import { Tabs } from "../Tabs/Tabs";
 import { Emoji as EmojiComponent } from "./components/Emoji";
 import { EmojiGrid } from "./components/EmojiGrid";
 
-interface EmojiPickerProps {
+export interface EmojiPickerProps {
   mode?: "dark" | "light";
   emojiSize?: number;
   sheetSize?: 32 | 64;
@@ -46,7 +46,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
   emojiSize = 32,
   sheetSize = 64,
   quality = "clean",
-  onEmojiClick = () => {},
+  onEmojiClick = () => undefined,
   styles,
 }) => {
   const scrollContentRef = useRef<HTMLDivElement>(null);
@@ -59,7 +59,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
   }>(LOCAL_STORAGE_RECENT, {});
 
   const [variations, setVariations, removeVariations] = useLocalStorage<{
-    [key: string]: Emoji;
+    [key: string]: BaseEmoji;
   }>(LOCAL_STORAGE_VARIATION, {});
 
   const [showInput, setShowInput] = useState(true);
@@ -169,11 +169,12 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
         }
         setShowInput(true);
 
-        scrollContentRef.current?.classList.add("scrolling");
-
-        smoothScroll(categoryElement, scrollContentRef.current!).then(() => {
-          scrollContentRef.current?.classList.remove("scrolling");
-        });
+        if (scrollContentRef.current) {
+          scrollContentRef.current.classList.add("scrolling");
+          smoothScroll(categoryElement, scrollContentRef.current).then(() => {
+            scrollContentRef.current?.classList.remove("scrolling");
+          });
+        }
       }, 0);
     }
   };
@@ -213,8 +214,6 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
     const resultEmoji = variations[emoji.native] || emoji;
     onEmojiClick(resultEmoji.native);
   };
-
-  const columns = `repeat(auto-fill, minmax(min(${emojiSize}px, 100%), 1fr))`;
 
   return (
     <div
@@ -289,11 +288,13 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
             }}
             onEmojiClick={(emoji) => {
               setShowPicker(false);
-              setVariations(LOCAL_STORAGE_VARIATION, {
-                ...variations,
-                [emojiPicker?.emoji!.native]: emoji,
-              });
-              saveToRecentEmojis(emojiPicker.emoji!);
+              if (emojiPicker?.emoji) {
+                setVariations(LOCAL_STORAGE_VARIATION, {
+                  ...variations,
+                  [emojiPicker.emoji.native]: emoji,
+                });
+                saveToRecentEmojis(emojiPicker.emoji);
+              }
               onEmojiClick(emoji.native);
             }}
           />
@@ -349,7 +350,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
                 }
               }}
             >
-              {Object.entries(groupedEmojis).map(([key, emojis], index) => (
+              {Object.entries(groupedEmojis).map(([key, emojis]) => (
                 <div key={key} className="mb-6 relative emoji-category">
                   <div
                     className="text-left  text-gray-400 dark:text-secondary-100 text-sm mb-2"

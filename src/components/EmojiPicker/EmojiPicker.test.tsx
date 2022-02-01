@@ -55,10 +55,10 @@ describe("EmojiPicker", () => {
   });
 
   it("scrolls to category when tab is clicked", async () => {
-    const { getByTestId, queryByTestId } = render(<EmojiPicker />);
+    const { getByTestId } = render(<EmojiPicker />);
 
     const tabs = getByTestId("tabs");
-    fireEvent.click(tabs.firstChild!);
+    fireEvent.click(tabs.childNodes.item(0));
     await new Promise((r) => setTimeout(r, 250));
 
     expect(smoothScroll).toHaveBeenCalled();
