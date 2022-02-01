@@ -25,7 +25,7 @@ export const SkinTonePicker: FC<SkinTonePickerProps> = ({
   emoji,
   sheetSize,
   set,
-  onEmojiClick = () => {},
+  onEmojiClick = () => undefined,
 }) => {
   return (
     <Popover
