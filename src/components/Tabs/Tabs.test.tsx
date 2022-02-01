@@ -1,12 +1,12 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import React from "react";
 
 import { Tabs } from "./Tabs";
 
 const onTabChange = jest.fn();
-var localStorageMock = (function () {
+const localStorageMock = (function () {
   return {
-    getItem: function (key: string) {
+    getItem: function () {
       return { "😾": 1, "😂": 1, "🤣": 1, "🤮": 1 };
     },
   };
@@ -31,7 +31,7 @@ describe("Tabs", () => {
     const { getByTestId } = render(<Tabs value={0} onChange={onTabChange} />);
 
     const tabs = getByTestId("tabs");
-    fireEvent.click(tabs.firstChild!);
+    fireEvent.click(tabs.childNodes.item(0));
 
     expect(onTabChange).toHaveBeenCalled();
   });
