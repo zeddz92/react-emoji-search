@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+- 12
+sudo: false
+script: npm run test
+before_script:
+  - npm run lint
+branches:
+  only:
+  - main
