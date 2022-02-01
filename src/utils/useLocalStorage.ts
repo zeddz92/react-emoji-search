@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+type RemoveItemFN = (key: string) => void;
+type SetItemFN<T> = (key: string, value: T) => void;
+
 export const getItem = <T>(key: string): T | null => {
   const item = localStorage.getItem(key);
   if (item) {
@@ -10,7 +13,7 @@ export const getItem = <T>(key: string): T | null => {
 export function useLocalStorage<T = string>(
   key: string,
   defaultValue: T
-): [T, Function, Function] {
+): [T, SetItemFN<T>, RemoveItemFN] {
   const [state, setState] = useState<T>(defaultValue);
 
   useEffect(() => {
