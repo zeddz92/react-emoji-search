@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, TouchEvent, useRef, useState } from "react";
+import React, { FC, MouseEvent, useRef, useState } from "react";
 
 interface ButtonProps {
   testId?: string;
@@ -19,15 +19,7 @@ export const Button: FC<ButtonProps> = ({
 
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const start = function (
-    e: MouseEvent<HTMLButtonElement> | TouchEvent<HTMLButtonElement>
-  ) {
-    const event = e as MouseEvent<HTMLButtonElement>;
-
-    if (event.type === "click" && event.button !== 0) {
-      event.stopPropagation();
-      return;
-    }
+  const start = function () {
     setIsLongPress(false);
 
     setPressTimer(
