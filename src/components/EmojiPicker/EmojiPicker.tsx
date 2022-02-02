@@ -23,6 +23,7 @@ import { SkinTonePicker } from "../SkinTonePicker";
 import { Tabs } from "../Tabs/Tabs";
 import { Emoji as EmojiComponent } from "./components/Emoji";
 import { EmojiGrid } from "./components/EmojiGrid";
+import { handleScroll } from "../../utils/handleScroll";
 
 export interface EmojiPickerProps {
   mode?: "dark" | "light";
@@ -46,7 +47,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
   emojiSize = 32,
   sheetSize = 64,
   quality = "clean",
-  onEmojiClick = () => undefined,
+  onEmojiClick = () => {},
   styles,
 }) => {
   const scrollContentRef = useRef<HTMLDivElement>(null);
@@ -54,11 +55,11 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [recentEmojis, setRecentEmojis, removeRecentEmojis] = useLocalStorage<{
+  const [recentEmojis, setRecentEmojis] = useLocalStorage<{
     [key: string]: number;
   }>(LOCAL_STORAGE_RECENT, {});
 
-  const [variations, setVariations, removeVariations] = useLocalStorage<{
+  const [variations, setVariations] = useLocalStorage<{
     [key: string]: BaseEmoji;
   }>(LOCAL_STORAGE_VARIATION, {});
 
@@ -82,55 +83,17 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
     emoji: null,
   });
 
-  // Clear old settings
-  useEffect(() => {
-    if (
-      recentEmojis.length > 0 &&
-      Object.keys(recentEmojis[0]).indexOf("emoji") > -1
-    ) {
-      removeRecentEmojis(LOCAL_STORAGE_RECENT);
-    }
-
-    const variationValues = Object.values(variations);
-
-    if (
-      variationValues.length > 0 &&
-      Object.keys(variationValues[0]).indexOf("emoji") > -1
-    ) {
-      removeVariations(LOCAL_STORAGE_VARIATION);
-    }
-  }, [recentEmojis, variations]);
-
   useEffect(() => {
     const groupedEmojis = getGroupedEmojis(set, emojiVersion);
     setGroupedEmojis(groupedEmojis);
   }, [set, emojiVersion]);
 
-  const handleScroll = useCallback(
+  const handleScrollCallback = useCallback(
     (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
-      const scrollPosition = e.currentTarget.scrollTop + 40;
-
-      const target = e.currentTarget;
-      const isScrolling = e.currentTarget.classList.contains("scrolling");
-      if (isScrolling) {
-        return;
+      const tabIndex = handleScroll(e);
+      if (typeof tabIndex !== "undefined") {
+        setTabIndex(tabIndex);
       }
-      const elemCategories = target.querySelectorAll(".emoji-category");
-      const hasRecentEmojis = Object.keys(recentEmojis).length !== 0;
-      elemCategories.forEach((el, index) => {
-        const category = el as HTMLElement;
-
-        if (
-          scrollPosition >= category.offsetTop &&
-          scrollPosition < category.offsetTop + el.clientHeight
-        ) {
-          if (hasRecentEmojis) {
-            setTabIndex(index - 1);
-          } else {
-            setTabIndex(index);
-          }
-        }
-      });
     },
     []
   );
@@ -154,28 +117,29 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
     newValue: number
   ) => {
     const id = tab.currentTarget.getAttribute("data-id");
-    if (!id) {
-      return;
-    }
-    const doc = tab.currentTarget.ownerDocument;
-    const categoryElement = doc.querySelector(`#category-${id}`);
-    if (categoryElement) {
-      setTabIndex(newValue);
+    if (id) {
+      const doc = tab.currentTarget.ownerDocument;
+      const categoryElement = doc.querySelector(`#category-${id}`);
+      if (categoryElement) {
+        setTabIndex(newValue);
 
-      setTimeout(() => {
-        if (searchInputRef.current) {
-          searchInputRef.current.value = "";
-          setResultEmojis(undefined);
-        }
-        setShowInput(true);
+        setTimeout(() => {
+          if (searchInputRef.current) {
+            searchInputRef.current.value = "";
+            setResultEmojis(undefined);
+          }
+          setShowInput(true);
 
-        if (scrollContentRef.current) {
-          scrollContentRef.current.classList.add("scrolling");
-          smoothScroll(categoryElement, scrollContentRef.current).then(() => {
-            scrollContentRef.current?.classList.remove("scrolling");
-          });
-        }
-      }, 0);
+          if (scrollContentRef.current) {
+            scrollContentRef.current.classList.add("scrolling");
+            smoothScroll(categoryElement, scrollContentRef.current).then(() => {
+              if (scrollContentRef.current) {
+                scrollContentRef.current.classList.remove("scrolling");
+              }
+            });
+          }
+        }, 0);
+      }
     }
   };
 
@@ -217,6 +181,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
 
   return (
     <div
+      data-testid="emoji-picker"
       onClick={() => {
         if (showPicker) {
           setShowPicker(false);
@@ -288,7 +253,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
             }}
             onEmojiClick={(emoji) => {
               setShowPicker(false);
-              if (emojiPicker?.emoji) {
+              if (emojiPicker.emoji) {
                 setVariations(LOCAL_STORAGE_VARIATION, {
                   ...variations,
                   [emojiPicker.emoji.native]: emoji,
@@ -336,7 +301,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
                 hidden: !!resultEmojis,
               })}
               ref={scrollContentRef}
-              onScroll={handleScroll}
+              onScroll={handleScrollCallback}
               onWheel={(e) => {
                 const inThreshold = e.currentTarget.scrollTop % 150 === 0;
                 if (!inThreshold) {
@@ -364,7 +329,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
                     className="absolute -top-15"
                   ></span>
                   <EmojiGrid emojiSize={emojiSize} emojiSpacing={emojiSpacing}>
-                    {emojis?.map((data) => (
+                    {emojis.map((data) => (
                       <Button
                         testId={`${key}-emoji`}
                         key={`emoji-${data.native}`}
