@@ -11,7 +11,7 @@ export const searchEmoji = (text: string, set: EmojiSet, version: Version) => {
     (emoji) =>
       (set === "native" || emoji[set] === 1) &&
       emoji.version <= version &&
-      emoji.keywords?.some((word: string) => word.startsWith(text))
+      emoji.keywords.some((word: string) => word.startsWith(text))
   );
 };
 
@@ -40,7 +40,7 @@ export const getGroupedEmojis = (set: EmojiSet, version: Version) => {
     return acc;
   }, defaultGroupedEmojisValue);
 
-  if (!result.Recent) {
+  if (!result.Recent.length) {
     delete result["Recent"];
   }
 
