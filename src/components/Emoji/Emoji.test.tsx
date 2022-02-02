@@ -29,16 +29,24 @@ describe("Emoji", () => {
   it("renders set emoji", async () => {
     const { findByTestId } = render(<Emoji set="apple" unicode="😀" />);
 
-    const noFoundEmoji = await findByTestId("emoji-img");
+    const foundEmoji = await findByTestId("emoji-img");
 
-    expect(noFoundEmoji).toBeTruthy();
-    expect(noFoundEmoji.getAttribute("aria-label")).toBe("😀");
+    expect(foundEmoji).toBeTruthy();
+    expect(foundEmoji.getAttribute("aria-label")).toBe("😀");
   });
   it("renders native emoji", async () => {
     const { findByText } = render(<Emoji set="native" unicode="😀" />);
 
-    const noFoundEmoji = await findByText("😀");
+    const foundEmoji = await findByText("😀");
 
-    expect(noFoundEmoji).toBeTruthy();
+    expect(foundEmoji).toBeTruthy();
+  });
+
+  it("renders skin variation emoji", async () => {
+    const { findByText } = render(<Emoji set="native" unicode="👋🏼" />);
+
+    const foundEmoji = await findByText("👋🏼");
+
+    expect(foundEmoji).toBeTruthy();
   });
 });

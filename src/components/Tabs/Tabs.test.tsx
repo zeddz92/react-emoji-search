@@ -23,7 +23,14 @@ describe("Tabs", () => {
   });
 
   it("renders without crashing", () => {
-    const tabs = render(<Tabs value={0} onChange={onTabChange} />);
+    const tabs = render(
+      <Tabs
+        value={0}
+        onChange={onTabChange}
+        showIndicator={true}
+        styles={{ fontColor: "black", indicatorColor: "red" }}
+      />
+    );
     expect(tabs).toBeTruthy();
   });
 
@@ -32,12 +39,15 @@ describe("Tabs", () => {
 
     const tabs = getByTestId("tabs");
     fireEvent.click(tabs.childNodes.item(0));
+    fireEvent.resize(window);
 
     expect(onTabChange).toHaveBeenCalled();
   });
 
   it("hides recent tab when there's no data in local storage", () => {
-    const { queryByTitle } = render(<Tabs value={0} onChange={onTabChange} />);
+    const { queryByTitle } = render(
+      <Tabs value={0} onChange={onTabChange} showIndicator={true} />
+    );
     const recentTab = queryByTitle("Recent");
 
     expect(recentTab).toBeNull();

@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import React from "react";
 
 import { SkinTonePicker } from "./SkinTonePicker";
@@ -72,6 +72,8 @@ const emojiData = {
   img: "emoji-11-3.webp",
 };
 
+const onEmojiClick = jest.fn();
+
 describe("SkinTonePicker", () => {
   it("renders without crashing", () => {
     const emoji = render(
@@ -105,6 +107,26 @@ describe("SkinTonePicker", () => {
     expect(skinTonePicker.childElementCount).toBe(
       emojiData.skinVariations.length + 1
     );
+  });
+
+  it("calls onClick callback when emoji is clicked", async () => {
+    const { findByTestId } = render(
+      <SkinTonePicker
+        onEmojiClick={onEmojiClick}
+        emoji={emojiData}
+        sheetSize={32}
+        isOpen={true}
+        targetElement={null}
+        emojiSize={32}
+        set="apple"
+        boundaryElement={null}
+      />
+    );
+    const skinTonePicker = await findByTestId("skin-tone-picker");
+    fireEvent.click(skinTonePicker.childNodes.item(0));
+    fireEvent.click(skinTonePicker.childNodes.item(1));
+
+    expect(onEmojiClick).toHaveBeenCalledTimes(2);
   });
 
   it("renders only main emoji if it does not have skin variations", async () => {
