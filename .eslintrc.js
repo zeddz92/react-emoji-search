@@ -7,6 +7,7 @@ module.exports = {
     jest: true,
   },
   rules: {
+    "@typescript-eslint/no-empty-function": "off",
     "prettier/prettier": [
       "error",
       {
