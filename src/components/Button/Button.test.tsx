@@ -33,4 +33,19 @@ describe("Button", () => {
 
     expect(onClick).toHaveBeenCalled();
   });
+
+  it("cancels onLongPress callback", async () => {
+    const onLongPress = jest.fn();
+    render(<Button onLongPress={onLongPress} />);
+
+    const button = screen.getByRole("button");
+    await act(async () => {
+      fireEvent.mouseDown(button);
+      await new Promise((r) => setTimeout(r, 100));
+      fireEvent.mouseOut(button);
+      fireEvent.click(button, "onLongPress");
+    });
+
+    expect(onLongPress).not.toHaveBeenCalled();
+  });
 });
