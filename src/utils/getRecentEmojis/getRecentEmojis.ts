@@ -1,6 +1,6 @@
-import { LOCAL_STORAGE_RECENT } from "../constants";
-import { Emoji, EmojiSet } from "../types/emoji";
-import { getItem } from "./useLocalStorage";
+import { LOCAL_STORAGE_RECENT } from "../../constants";
+import { Emoji, EmojiSet } from "../../types/emoji";
+import { getItem } from "../useLocalStorage";
 
 const _sortByFrequency = (a: [string, number], b: [string, number]) => {
   if (a[1] > b[1]) {
