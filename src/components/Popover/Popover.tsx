@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useRef } from "react";
 import { CSSTransition } from "react-transition-group";
 
+import { handlePopoverPosition } from "../../utils/handlePopoverPosition";
+
 export interface PopoverProps {
   targetElement: HTMLElement | null;
   boundaryElement: HTMLElement | null;
@@ -9,9 +11,6 @@ export interface PopoverProps {
     backgroundColor?: string;
   };
 }
-
-const arrowSize = 10;
-const arrowOffset = 12;
 
 export const Popover: FC<PopoverProps> = ({
   children,
@@ -23,54 +22,18 @@ export const Popover: FC<PopoverProps> = ({
   const popoverRef = useRef<HTMLDivElement>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
 
-  const boundaryWidth = boundaryElement?.clientWidth || 0;
-  const boundaryY = boundaryElement?.getBoundingClientRect().y || 0;
-
-  const handlePopoverPosition = () => {
-    if (targetElement && popoverRef.current) {
-      const top =
-        targetElement.getBoundingClientRect().y -
-        boundaryY -
-        targetElement.offsetHeight * 1.9;
-
-      popoverRef.current.style.setProperty("top", `${top}px`);
-
-      if (
-        targetElement.offsetLeft +
-          popoverRef.current.offsetWidth +
-          targetElement.offsetWidth <=
-        boundaryWidth
-      ) {
-        popoverRef.current.style.setProperty(
-          "left",
-          `${targetElement.offsetLeft + arrowSize - 6}px`
-        );
-
-        arrowRef.current?.style.removeProperty("right");
-        arrowRef.current?.style.setProperty("left", `${arrowOffset}px`);
-      } else {
-        popoverRef.current.style.setProperty(
-          "left",
-          `${
-            targetElement.offsetLeft -
-            popoverRef.current.offsetWidth +
-            targetElement.offsetWidth +
-            arrowSize +
-            6
-          }px`
-        );
-
-        arrowRef.current?.style.removeProperty("left");
-        arrowRef.current?.style.setProperty("right", `${arrowOffset}px`);
-      }
-    }
-  };
+  const resizeCallback = handlePopoverPosition({
+    boundaryElement,
+    arrowRef,
+    popoverRef,
+    targetElement,
+  });
 
   useEffect(() => {
-    window.addEventListener("resize", handlePopoverPosition);
+    window.addEventListener("resize", resizeCallback);
 
     return () => {
-      window.removeEventListener("resize", handlePopoverPosition);
+      window.removeEventListener("resize", resizeCallback);
     };
   }, [handlePopoverPosition]);
 
@@ -85,11 +48,13 @@ export const Popover: FC<PopoverProps> = ({
         }}
         classNames="spring"
         unmountOnExit={true}
-        onEntering={handlePopoverPosition}
+        onEntering={resizeCallback}
       >
         <div
+          data-testid="popover"
           onClick={(e) => {
             e.stopPropagation();
+            e.preventDefault();
           }}
           className="shadow-md rounded filter bg-picker-light dark:bg-picker-dark w-min relative select-none flex"
           style={{ backgroundColor: styles?.backgroundColor }}
@@ -98,6 +63,7 @@ export const Popover: FC<PopoverProps> = ({
             <>
               {children}
               <div
+                data-testid="arrow"
                 className="arrow"
                 style={{ borderTopColor: styles?.backgroundColor }}
                 ref={arrowRef}
