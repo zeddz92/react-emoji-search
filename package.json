@@ -1,6 +1,6 @@
 {
   "name": "react-emoji-search",
-  "version": "2.2.15",
+  "version": "2.2.16",
   "description": "Whatsapp like emoji picker",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -11,7 +11,7 @@
     "build": "rollup --config",
     "lint": "eslint --ext .ts --ext .tsx --ext .js --ext .jsx src/",
     "tsc": "tsc",
-    "test": "jest --coverage",
+    "test": "jest",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "prepublishOnly": "npm run lint && npm run build"
