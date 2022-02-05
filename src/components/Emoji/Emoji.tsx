@@ -33,7 +33,6 @@ export const Emoji: FC<EmojiProps> = ({
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    //TODO: extract find emoji logic
     let found = false;
     for (let i = 0; i < emojis.length; i++) {
       const emoji = emojis[i];

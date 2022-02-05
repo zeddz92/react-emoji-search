@@ -4,7 +4,7 @@ import React from "react";
 import { Emoji } from "./Emoji";
 
 describe("Emoji", () => {
-  it("renders without crashing", () => {
+  it("renders emoji without crashing", () => {
     const emoji = render(<Emoji unicode="😀" />);
     expect(emoji).toBeTruthy();
   });
@@ -26,7 +26,7 @@ describe("Emoji", () => {
     expect(noFoundEmoji).toBeTruthy();
   });
 
-  it("renders set emoji", async () => {
+  it("renders img emoji", async () => {
     const { findByTestId } = render(<Emoji set="apple" unicode="😀" />);
 
     const foundEmoji = await findByTestId("emoji-img");

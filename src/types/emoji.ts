@@ -1,3 +1,5 @@
+import { Styles } from "./styles";
+
 export interface EmojiSkin {
   unified: string;
   non_qualified: string | null;
@@ -52,4 +54,17 @@ export interface Emoji {
   sortOrder: number;
   skinVariations?: BaseEmoji[];
   img: string;
+}
+
+export interface EmojiPickerProps {
+  mode?: "dark" | "light";
+  emojiSize?: number;
+  sheetSize?: 32 | 64;
+  emojiSpacing?: number;
+  set?: EmojiSet;
+  quality?: EmojiQuality;
+  tabsVariant?: "fullWidth" | "default";
+  onEmojiClick?(emoji: string): void;
+  emojiVersion?: Version;
+  styles?: Styles;
 }

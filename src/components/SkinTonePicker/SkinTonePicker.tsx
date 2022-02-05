@@ -1,31 +1,25 @@
-import React, { FC } from "react";
-import { Emoji as EmojiType, EmojiSet } from "types/emoji";
+import { EmojiPickerContext } from "../../contexts/EmojiPickerContext";
+import React, { FC, useContext } from "react";
+import { BaseEmoji, Emoji as EmojiType } from "../../types/emoji";
 
 import { Emoji } from "../EmojiPicker/components/Emoji";
 import { Popover, PopoverProps } from "../Popover";
 
 interface SkinTonePickerProps extends PopoverProps {
-  onEmojiClick?(
-    emoji: Omit<EmojiType, "keywords" | "sortOrder" | "name">
-  ): void;
+  onEmojiClick?(emoji: BaseEmoji): void;
   emoji: EmojiType | null;
-  emojiSize: number;
-  sheetSize: 32 | 64;
   boundaryElement: HTMLElement | null;
-  set: EmojiSet;
 }
 
 export const SkinTonePicker: FC<SkinTonePickerProps> = ({
   isOpen,
-  styles,
   targetElement,
-  emojiSize,
   boundaryElement,
   emoji,
-  sheetSize,
-  set,
+
   onEmojiClick,
 }) => {
+  const { styles, emojiSize, sheetSize, set } = useContext(EmojiPickerContext);
   return (
     <Popover
       isOpen={isOpen}

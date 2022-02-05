@@ -4,7 +4,7 @@ import React from "react";
 import { Popover } from "./Popover";
 
 describe("Popover", () => {
-  it("renders without crashing", () => {
+  it("renders popover without crashing", () => {
     const popover = render(
       <Popover
         targetElement={null}

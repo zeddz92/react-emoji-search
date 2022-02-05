@@ -75,15 +75,12 @@ const emojiData = {
 const onEmojiClick = jest.fn();
 
 describe("SkinTonePicker", () => {
-  it("renders without crashing", () => {
+  it("renders skinTonePicker without crashing", () => {
     const emoji = render(
       <SkinTonePicker
         emoji={null}
-        sheetSize={32}
         isOpen={true}
         targetElement={null}
-        emojiSize={32}
-        set="apple"
         boundaryElement={null}
       />
     );
@@ -94,11 +91,8 @@ describe("SkinTonePicker", () => {
     const { findByTestId } = render(
       <SkinTonePicker
         emoji={emojiData}
-        sheetSize={32}
         isOpen={true}
         targetElement={null}
-        emojiSize={32}
-        set="apple"
         boundaryElement={null}
       />
     );
@@ -114,11 +108,8 @@ describe("SkinTonePicker", () => {
       <SkinTonePicker
         onEmojiClick={onEmojiClick}
         emoji={emojiData}
-        sheetSize={32}
         isOpen={true}
         targetElement={null}
-        emojiSize={32}
-        set="apple"
         boundaryElement={null}
       />
     );
@@ -133,11 +124,8 @@ describe("SkinTonePicker", () => {
     const { findByTestId } = render(
       <SkinTonePicker
         emoji={{ ...emojiData, skinVariations: undefined }}
-        sheetSize={32}
         isOpen={true}
         targetElement={null}
-        emojiSize={32}
-        set="apple"
         boundaryElement={null}
       />
     );
@@ -150,11 +138,8 @@ describe("SkinTonePicker", () => {
     const { queryByTestId } = render(
       <SkinTonePicker
         emoji={emojiData}
-        sheetSize={32}
         isOpen={false}
         targetElement={null}
-        emojiSize={32}
-        set="apple"
         boundaryElement={null}
       />
     );

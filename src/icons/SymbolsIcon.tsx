@@ -2,7 +2,7 @@ import React from "react";
 
 export const SymbolsIcon = () => {
   return (
-    <svg viewBox="0 0 24 24" width="24" height="24">
+    <svg data-name="symbols" viewBox="0 0 24 24" width="24" height="24">
       <path
         fill="currentColor"
         d="M14.5 12.9V11h2.2l-.2-1.3h-2V7.3H13v2.5h-2V7.4H9.5v2.4H7.2l.2 1.2h2.1v1.9H7.3l.2 1.3h2v2.4H11v-2.4h2v2.4h1.5v-2.4h2.3l-.2-1.3h-2.1zM11 11h2v1.9h-2V11z"

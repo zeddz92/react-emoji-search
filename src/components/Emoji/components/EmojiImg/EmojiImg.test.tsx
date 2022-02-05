@@ -21,7 +21,7 @@ const emoji = {
 };
 
 describe("EmojiImg", () => {
-  it("renders without crashing", () => {
+  it("renders emojiImg without crashing", () => {
     const emojiComponent = render(<EmojiImg emoji={emoji} />);
     expect(emojiComponent).toBeTruthy();
   });

@@ -2,7 +2,7 @@ import React from "react";
 
 export const PeopleIcon = () => {
   return (
-    <svg viewBox="0 0 24 24" width="24" height="24">
+    <svg data-name="people" viewBox="0 0 24 24" width="24" height="24">
       <path
         fill="currentColor"
         d="M12 22.1C6.4 22.1 1.9 17.6 1.9 12S6.4 1.9 12 1.9 22.1 6.4 22.1 12 17.6 22.1 12 22.1zm0-18.6c-4.7 0-8.5 3.8-8.5 8.5s3.8 8.5 8.5 8.5 8.5-3.8 8.5-8.5-3.8-8.5-8.5-8.5z"

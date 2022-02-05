@@ -22,7 +22,7 @@ describe("Tabs", () => {
     Object.defineProperty(window, "localStorage", { value: localStorageBack });
   });
 
-  it("renders without crashing", () => {
+  it("renders tabs without crashing", () => {
     const tabs = render(
       <Tabs
         value={0}

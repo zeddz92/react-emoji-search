@@ -1,6 +1,11 @@
 src/
-jest.config.js
-tailwind.config.js
-postcss.config.js
 .storybook
-coverage
+coverage/
+CODE_OF_CONDUCT.md
+.tsconfig.json
+.eslintrc.js
+.editorconfig
+.**ignore
+test/
+*.yml
+*.config.js

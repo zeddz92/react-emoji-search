@@ -1,17 +1,26 @@
 import { render } from "@testing-library/react";
+import {
+  defaultContextValue,
+  EmojiPickerContext,
+} from "../../../../contexts/EmojiPickerContext";
 import React from "react";
 
+import emojis from "../../../../data/emojis";
 import { EmojiGrid } from "./EmojiGrid";
 
 describe("EmojiGrid", () => {
-  it("renders without crashing", async () => {
-    const emojiGrid = render(<EmojiGrid emojiSize={32} emojiSpacing={16} />);
+  it("renders emojiGrid without crashing", async () => {
+    const emojiGrid = render(<EmojiGrid data={emojis} />);
 
     expect(emojiGrid).toBeTruthy();
   });
   it("set styles based on props", async () => {
     const { findByTestId } = render(
-      <EmojiGrid emojiSize={32} emojiSpacing={16} />
+      <EmojiPickerContext.Provider
+        value={{ ...defaultContextValue, emojiSpacing: 16, emojiSize: 32 }}
+      >
+        <EmojiGrid data={emojis} />
+      </EmojiPickerContext.Provider>
     );
     const emojiGrid = await findByTestId("emoji-grid");
 

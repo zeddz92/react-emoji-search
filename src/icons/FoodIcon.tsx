@@ -2,7 +2,7 @@ import React from "react";
 
 export const FoodIcon = () => {
   return (
-    <svg viewBox="0 0 24 24" width="24" height="24">
+    <svg data-name="food" viewBox="0 0 24 24" width="24" height="24">
       <path
         fill="currentColor"
         d="M7.4 11.4c-.4 0-.8.4-.8.8V14c0 .4.4.8.8.8s.8-.4.6-.8v-1.8c0-.6-.2-.8-.6-.8zM4.6 10.4c-.4 0-.8.4-.8.8V15c0 .4.4.8.8.8s.8-.4.8-.8v-3.8c0-.6-.4-.8-.8-.8z"

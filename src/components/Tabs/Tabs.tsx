@@ -82,7 +82,7 @@ export const categories: Tab[] = [
 ];
 
 export const Tabs: FC<Props> = ({
-  variant,
+  variant = "fullWidth",
   value,
   onChange,
   showIndicator,

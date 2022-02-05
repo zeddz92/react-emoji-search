@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { Meta, Story } from "@storybook/react";
-import { EmojiPicker, EmojiPickerProps } from "./components/EmojiPicker";
-import { EmojiSet } from "types/emoji";
+import { EmojiPicker } from "./components/EmojiPicker";
+import { EmojiPickerProps, EmojiSet } from "./types/emoji";
 
 const meta: Meta<PropsWithChildren<EmojiPickerProps>> = {
   title: "My Component",

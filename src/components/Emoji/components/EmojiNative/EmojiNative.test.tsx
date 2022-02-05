@@ -6,7 +6,7 @@ import { EmojiNative } from "./EmojiNative";
 const emoji = "😀";
 
 describe("EmojiNative", () => {
-  it("renders without crashing", () => {
+  it("renders emojiNative without crashing", () => {
     const emojiComponent = render(<EmojiNative emoji={emoji} />);
     expect(emojiComponent).toBeTruthy();
   });

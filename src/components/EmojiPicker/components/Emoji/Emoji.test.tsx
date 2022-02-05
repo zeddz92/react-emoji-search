@@ -15,7 +15,7 @@ const emojiData = {
 };
 
 describe("Emoji Picker/Emoji", () => {
-  it("renders without crashing", () => {
+  it("renders emojiPicker/emoji without crashing", () => {
     const emoji = render(<Emoji data={emojiData} />);
     expect(emoji).toBeTruthy();
   });

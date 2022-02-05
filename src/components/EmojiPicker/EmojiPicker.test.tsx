@@ -19,9 +19,10 @@ describe("EmojiPicker", () => {
     onEmojiClick.mockReset();
     jest.resetModules();
   });
-  it("renders without crashing", () => {
+  it("renders emojiPicker without crashing", () => {
     const emojiPicker = render(
       <EmojiPicker
+        set="apple"
         mode="dark"
         styles={{
           backgroundColor: "black",
@@ -38,13 +39,14 @@ describe("EmojiPicker", () => {
   });
 
   it("calls onEmojiClick callback when an emoji is clicked", async () => {
-    const { findAllByTestId } = render(
+    const { getAllByTestId } = render(
       <EmojiPicker onEmojiClick={onEmojiClick} />
     );
 
-    const emojis = await findAllByTestId("Smileys & People-emoji");
+    const emojis = getAllByTestId("emoji-grid")[1];
+    const emojiBtn = emojis.querySelectorAll("button").item(0);
 
-    fireEvent.click(emojis[0]);
+    fireEvent.click(emojiBtn);
 
     expect(onEmojiClick).toHaveBeenCalled();
   });

@@ -5,7 +5,10 @@ Emoji picker displayed just like Whatsapp.
 
 [Demo](https://moji-search.herokuapp.com/)
 <br/><br/>
-<a style="margin-right: 8px;" href="https://app.travis-ci.com/zeddz92/react-emoji-search"><img src="https://app.travis-ci.com/zeddz92/react-emoji-search.png?branch=main" alt="Build Status"></a><a style="margin-right: 8px;" href="https://snyk.io/test/github/zeddz92/react-emoji-search?targetFile=package.json"><img src="https://snyk.io/test/github/zeddz92/react-emoji-search/badge.svg?targetFile=package.json" alt="Build Status"></a><a href="https://codecov.io/github/zeddz92/react-emoji-search?branch=main"><img src="https://img.shields.io/codecov/c/github/zeddz92/react-emoji-search.svg?maxAge=2592000" alt="Build Status"></a>
+<a href="https://app.travis-ci.com/zeddz92/react-emoji-search"><img src="https://app.travis-ci.com/zeddz92/react-emoji-search.svg?branch=main" alt="Build Status"></a>
+<a href="https://snyk.io/test/github/zeddz92/react-emoji-search?targetFile=package.json"><img src="https://snyk.io/test/github/zeddz92/react-emoji-search/badge.svg?targetFile=package.json" alt="Vulnerability Status"></a>
+<a href="https://codecov.io/github/zeddz92/react-emoji-search?branch=main"><img src="https://img.shields.io/codecov/c/github/zeddz92/react-emoji-search.svg" alt="Coverage Status"></a>
+<a href="https://codeclimate.com/github/zeddz92/react-emoji-search/maintainability"><img src="https://api.codeclimate.com/v1/badges/8b3068fb4b0c7a43199b/maintainability" /></a>
 
 </div>
 

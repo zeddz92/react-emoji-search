@@ -1,12 +1,16 @@
-import emojis from "../data/emojis";
-import { Emoji, EmojiSet, Version } from "../types/emoji";
-import { getRecentEmojis } from "./getRecentEmojis";
+import emojis from "../../data/emojis";
+import { Emoji, EmojiSet, Version } from "../../types/emoji";
+import { getRecentEmojis } from "../getRecentEmojis";
 
 export interface GroupedEmojis {
   [key: string]: Emoji[];
 }
 
-export const searchEmoji = (text: string, set: EmojiSet, version: Version) => {
+export const searchEmoji = (
+  text: string,
+  set: EmojiSet = "apple",
+  version: Version = 12.0
+) => {
   return emojis.filter(
     (emoji) =>
       (set === "native" || emoji[set] === 1) &&
@@ -15,7 +19,10 @@ export const searchEmoji = (text: string, set: EmojiSet, version: Version) => {
   );
 };
 
-export const getGroupedEmojis = (set: EmojiSet, version: Version) => {
+export const getGroupedEmojis = (
+  set: EmojiSet = "apple",
+  version: Version = 12.0
+) => {
   const defaultGroupedEmojisValue = {
     Recent: getRecentEmojis(emojis, set),
     "Smileys & People": [],

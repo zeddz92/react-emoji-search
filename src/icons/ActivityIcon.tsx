@@ -2,7 +2,7 @@ import React from "react";
 
 export const ActivityIcon = () => {
   return (
-    <svg viewBox="0 0 24 24" width="24" height="24">
+    <svg data-name="activity" viewBox="0 0 24 24" width="24" height="24">
       <path
         fill="currentColor"
         d="M14.8 15.3l1.3-3.8c.1-.2 0-.5-.2-.6l-3.3-2.4c-.2-.1-.5-.1-.6 0l-3.3 2.4c-.2.1-.3.4-.2.6l1.3 3.8c.1.2.3.4.5.4h4c.2 0 .4-.2.5-.4z"
