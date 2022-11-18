@@ -7,7 +7,7 @@
   "typings": "dist/index.d.ts",
   "types": "dist",
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
+    "preinstall": "npx npm-force-resolutions || echo 'ignore'",
     "build": "rollup --config",
     "lint": "eslint --ext .ts --ext .tsx --ext .js --ext .jsx src/",
     "tsc": "tsc",
