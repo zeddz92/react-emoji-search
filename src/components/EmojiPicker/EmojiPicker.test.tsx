@@ -111,8 +111,10 @@ describe("EmojiPicker", () => {
     const { getByTestId } = render(<EmojiPicker />);
 
     const tabs = getByTestId("tabs");
-    fireEvent.click(tabs.childNodes.item(0));
-    await new Promise((_) => setTimeout(_, 0));
+    await act(async () => {
+      fireEvent.click(tabs.childNodes.item(0));
+      await new Promise((_) => setTimeout(_, 0));
+    });
 
     expect(smoothScroll).toHaveBeenCalled();
   });
@@ -138,7 +140,7 @@ describe("EmojiPicker", () => {
     expect(skinTonePicker.childNodes.item(0).textContent).toBe("🖕");
   });
 
-  it("on scroll down hide search input", async () => {
+  it.only("on scroll down hide search input", async () => {
     const { queryByTestId, getByTestId } = render(
       <EmojiPicker set="native" onEmojiClick={onEmojiClick} />
     );
@@ -146,23 +148,29 @@ describe("EmojiPicker", () => {
     const emojiList = getByTestId("emoji-list");
     const scrollDiv = document.createElement("div");
 
-    fireEvent.scroll(emojiList, {
-      target: scrollDiv,
-    });
-    fireEvent.wheel(emojiList, {
-      deltaY: 1,
-      target: { scrollTop: 151 },
+    await act(async () => {
+      fireEvent.scroll(emojiList, {
+        target: scrollDiv,
+      });
+      fireEvent.wheel(emojiList, {
+        deltaY: 1,
+        target: { scrollTop: 151 },
+      });
     });
 
-    // wait for hiding animation
-    await new Promise((_) => setTimeout(_, 500));
+    await act(async () => {
+      // wait for hiding animation
+      await new Promise((_) => setTimeout(_, 600));
+    });
 
     const searchInput = queryByTestId("search-input");
     expect(searchInput).toBeNull();
 
-    fireEvent.wheel(emojiList, {
-      deltaY: 0,
-      target: { scrollTop: 151 },
+    await act(async () => {
+      fireEvent.wheel(emojiList, {
+        deltaY: 0,
+        target: { scrollTop: 151 },
+      });
     });
 
     expect(queryByTestId("search-input")).toBeTruthy();

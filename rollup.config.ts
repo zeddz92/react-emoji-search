@@ -1,8 +1,10 @@
 import dts from "rollup-plugin-dts";
 import esBuild, { minify } from "rollup-plugin-esbuild";
 import postcss from "rollup-plugin-postcss";
+import { createRequire } from "node:module";
 
-import pkg from "./package.json";
+const require = createRequire(import.meta.url);
+const pkg = require("./package.json");
 
 // Excluded dependencies
 const devExternal = Object.keys(pkg.devDependencies);
@@ -17,26 +19,13 @@ const bundle = (config) => ({
 export default [
   bundle({
     plugins: [
-      esBuild({ minify: true }),
       postcss({
         minimize: true,
-        inject: true,
-      }),
-      {
-        name: "Use style-inject commonJS module`",
-        generateBundle: (_, bundle) => {
-          Object.entries(bundle).forEach((entry) => {
-            bundle[entry[0]].code = entry[1].code.replace(
-              "style-inject.es.js",
-              "style-inject.js"
-            );
-            bundle[entry[0]].code = entry[1].code.replace(
-              "../node_modules/",
-              ""
-            );
-          });
+        inject(cssVariableName) {
+          return `import styleInject from 'style-inject';\nstyleInject(${cssVariableName});`;
         },
-      },
+      }),
+      esBuild({ minify: true }),
     ],
     output: [
       {
