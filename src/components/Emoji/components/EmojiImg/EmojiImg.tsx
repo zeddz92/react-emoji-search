@@ -8,6 +8,7 @@ interface EmojiImgProps {
   set?: EmojiSet;
   quality?: EmojiQuality;
   sheetSize?: number;
+  keywords?: string[];
 }
 
 export const EmojiImg: FC<EmojiImgProps> = ({
@@ -16,6 +17,7 @@ export const EmojiImg: FC<EmojiImgProps> = ({
   quality = "clean",
   sheetSize = 64,
   set = "apple",
+  keywords,
 }) => {
   const img = `https://cdn.jsdelivr.net/npm/emoji-datasource-${set}-split@1.0.6/img/sheets-${quality}/${sheetSize}/${set}/${emoji.img}`;
 
@@ -23,6 +25,7 @@ export const EmojiImg: FC<EmojiImgProps> = ({
     <span
       data-testid="emoji-img"
       data-image={img}
+      title={keywords?.join(",")}
       aria-label={emoji.native}
       className="emoji-img"
       style={{
