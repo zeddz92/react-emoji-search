@@ -11,7 +11,7 @@ export const searchEmoji = (text: string, set: EmojiSet, version: Version) => {
     (emoji) =>
       (set === "native" || emoji[set] === 1) &&
       emoji.version <= version &&
-      emoji.keywords.some((word: string) => word.startsWith(text))
+      emoji.keywords.some((word: string) => word.includes(text))
   );
 };
 
