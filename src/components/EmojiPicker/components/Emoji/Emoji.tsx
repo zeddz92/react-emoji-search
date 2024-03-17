@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Emoji as BaseEmoji, EmojiQuality, EmojiSet } from "types/emoji";
+import { BaseEmoji, EmojiQuality, EmojiSet } from "types/emoji";
 
 import { EmojiImg } from "../../../Emoji/components/EmojiImg";
 import { EmojiNative } from "../../../Emoji/components/EmojiNative";

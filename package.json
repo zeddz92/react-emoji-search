@@ -1,6 +1,6 @@
 {
   "name": "react-emoji-search",
-  "version": "2.2.26",
+  "version": "2.2.27",
   "description": "Whatsapp like emoji picker",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
