@@ -20,6 +20,7 @@ export interface BaseEmoji {
   sheetX: number;
   sheetY: number;
   img: string;
+  keywords?: string[];
 }
 
 export type EmojiSet = "native" | "google" | "apple" | "facebook" | "twitter";
